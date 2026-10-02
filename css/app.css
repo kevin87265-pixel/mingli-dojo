@@ -253,3 +253,16 @@ details.inline summary{cursor:pointer;color:var(--acc);font-size:.9em;margin-top
 .dlg-box{background:var(--paper);border-radius:12px;padding:20px;width:min(420px,100%);box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:6px}
 #meName{cursor:pointer;text-decoration:underline dotted}
 #pendingOrders:empty{display:none!important}
+/* 手機上方列：字不拆行，名字太長就用…收尾 */
+.brand,.brand h1{white-space:nowrap;flex:0 0 auto}
+.who{flex-wrap:wrap;justify-content:flex-end;min-width:0;row-gap:4px}
+.who>*{white-space:nowrap;flex:0 0 auto}
+#meName{max-width:10em;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0}
+.who .chip{white-space:nowrap}
+@media (max-width:480px){
+  .brand h1{font-size:18px}
+  .brand .seal{width:26px;height:26px;font-size:15px}
+  .who{gap:6px}
+  #meName{max-width:6.5em}
+  .who img{display:none}
+}

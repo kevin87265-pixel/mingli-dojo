@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>命理道場</title>
+<meta name="description" content="八字、塔羅、紫微斗數、六爻初階／進階課程、練習題、排盤與起卦、考照班模擬考、真人互算、老師諮詢與擺攤資訊，一個平台走完。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/learn.css">
+<link rel="stylesheet" href="css/ui.css">
+</head>
+<body>
+<div class="app-top">
+  <div class="app-bar">
+    <div class="brand"><span class="seal">道</span><h1>命理道場</h1></div>
+    <div class="who">
+      <span class="sync" id="syncState"><i></i><span>訪客</span></span><span class="chip" id="mePoints" hidden></span>
+      <img id="meAvatar" alt="" hidden>
+      <span id="meName"></span>
+      <button class="ghost tiny" id="btnBig" type="button">大字</button>
+      <button class="primary tiny" id="btnLogin" type="button">登入</button>
+      <button class="ghost tiny" id="btnLogout" type="button" hidden>登出</button>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="功能">
+    <button data-tab="home" class="on">總覽</button>
+    <button data-tab="learn">學習</button>
+    <button data-tab="practice">練習</button>
+    <button data-tab="tower">通天塔</button>
+    <button data-tab="paipan">排盤抽牌</button>
+    <button data-tab="exam">考照班</button>
+    <button data-tab="classics">古籍庫</button>
+    <button data-tab="sim">真人模擬</button>
+    <button data-tab="match">互算配對<span class="n" id="nMatch" hidden></span></button>
+    <button data-tab="consult">老師與預約</button>
+    <button data-tab="leads">擺攤與貼文<span class="n" id="nLeads" hidden></span></button>
+    <button data-tab="tools">🔒 工具入口</button>
+    <button data-tab="shop">商店</button>
+    <button data-tab="wallet">點數</button>
+    <button data-tab="admin" id="tabAdmin" hidden>後台</button>
+  </nav>
+</div>
+
+<main class="app-main">
+<div id="cloudNotice" class="notice info slim" hidden><span>登入後可以保存學習進度、跟同學互算、預約老師。練習和擺攤看板不用登入也能看。</span><button class="primary tiny" type="button" onclick="document.getElementById('btnLogin').click()">登入</button></div>
+
+<!-- ===== 總覽 ===== -->
+<section class="tab" id="tab-home">
+  <div class="hm-hero"><div><div class="eyebrow">神奇身心靈學苑・命理道場</div><h2 id="homeHello">歡迎回來</h2><p id="homeSub">今天從哪裡開始？</p></div><div class="kpis hm-kpis">
+    <div class="kpi"><b id="kLearn">0%</b><span>課文已讀</span></div>
+    <div class="kpi"><b id="kPass">0%</b><span>練習過關</span></div>
+    <div class="kpi"><b id="kScore">0</b><span>旺衰道場總分</span></div>
+    <div class="kpi"><b id="kExam">–</b><span>模擬考最佳</span></div>
+  </div></div>
+  <h3 class="hm-h">課程進度</h3>
+  <div id="homeCourses"></div>
+  <h3 class="hm-h">一條龍</h3>
+  <div class="flow" id="flow">
+    <button data-go="learn">① 學習</button><span>→</span>
+    <button data-go="practice">② 練習</button><span>→</span>
+    <button data-go="paipan">③ 排盤抽牌</button><span>→</span>
+    <button data-go="exam">④ 考照班</button><span>→</span>
+    <button data-go="sim">⑤ 模擬客人</button><span>→</span>
+    <button data-go="match">⑥ 真人互算</button><span>→</span>
+    <button data-go="consult">⑦ 接案諮詢</button><span>→</span>
+    <button data-go="leads">⑧ 出攤資訊</button>
+  </div>
+  <h3 class="hm-h">動態</h3>
+  <div class="grid hm-grid">
+    <div class="card"><div class="hm-ctop"><h3>最近成績</h3><button class="ghost tiny" data-go="exam" type="button">考照班</button></div><div class="list slim" id="homeExams"></div></div>
+    <div class="card"><div class="hm-ctop"><h3>等你來算</h3><button class="ghost tiny" data-go="match" type="button">互算配對<span class="n" id="kMatch" hidden></span></button></div><div class="list slim" id="homeMatch"></div></div>
+    <div class="card"><div class="hm-ctop"><h3>最新擺攤資訊</h3><button class="ghost tiny" data-go="leads" type="button">看板<span class="n" id="kLeads" hidden></span></button></div><div class="list slim" id="homeLeads"></div></div>
+    <div class="card"><div class="hm-ctop"><h3>我的預約</h3><button class="ghost tiny" data-go="consult" type="button">老師與預約</button></div><div class="list slim" id="homeBookings"></div></div>
+  </div>
+</section>
+
+<!-- ===== 學習 ===== -->
+<section class="tab" id="tab-learn" hidden>
+  <div class="sec-head"><div><h2>學習</h2><p>八字、塔羅、紫微斗數、六爻、奇門遁甲各分初階與進階；八字、塔羅免費，紫微、六爻、奇門第一課免費，之後用金幣一課一課解鎖。讀完一課按「標記已讀」，再到「練習」做題。進度存在你的帳號裡。</p></div></div>
+  <div id="courses"></div>
+</section>
+
+<!-- ===== 練習 ===== -->
+<section class="tab" id="tab-practice" hidden>
+  <div class="sec-head"><div><h2>練習</h2><p>每一課都有隨機題，10 題答對 8 題過關；題目每次都不一樣。下面還有「計時挑戰」（手動排盤、手動起卦、排行榜）和綜合練習「旺衰道場」。</p></div><button type="button" class="ghost" id="toDrill">⏱ 計時挑戰與排行榜</button></div>
+  <div id="practiceCourses"></div>
+  <h2 id="drillH" class="ln-arth" style="margin-top:24px">計時挑戰：手動排盤・手動起卦</h2>
+  <p class="muted" id="drillP">不靠排盤軟體，自己一格一格算出來。全部答對才計時上榜，答錯每格罰 15 秒並告訴你怎麼算。登入後成績才會上排行榜。</p>
+  <div id="drillRoot"></div>
+  <h2 id="dojo" class="ln-arth" style="margin-top:24px">綜合練習：旺衰道場</h2>
+
+<section class="panel"><div class="sec-head" style="margin:0"><div><h2>你的成績</h2><p>地支藏干、旺衰喜用、格局成敗、大運喜忌。成績會同步到你的帳號。</p></div>
+  <div class="stats"><div><b id="stTotal">0</b><span>總分</span></div><div><b id="stAcc">–</b><span>強弱命中率</span></div><div><b id="stStreak">0</b><span>連續命中</span></div></div></div></section>
+
+<section class="panel">
+  <div class="eyebrow" style="margin-bottom:6px">練習範圍</div>
+  <div class="controls">
+    <div class="seg" id="scopeSeg">
+      <button data-s="hidden">地支藏干</button>
+      <button class="on" data-s="strength">旺衰喜用</button>
+      <button data-s="pattern">格局成敗</button>
+      <button data-s="luck">大運喜忌</button>
+      <button data-s="all">全套</button>
+    </div>
+  </div>
+  <div id="chartControls" style="margin-top:10px">
+    <div class="controls">
+      <div class="seg" id="modeSeg">
+        <button class="on" data-m="random">隨機出題</button>
+        <button data-m="custom">自訂命盤</button>
+      </div>
+      <div class="seg" id="diffSeg">
+        <button data-d="easy">入門・盤勢分明</button>
+        <button class="on" data-d="mid">進階・不挑盤</button>
+        <button data-d="hard">挑戰・中和與從格</button>
+      </div>
+    </div>
+    <div id="customBox" hidden>
+      <div class="custom" id="customGrid"></div>
+      <div class="warn" id="customWarn" hidden></div>
+      <div class="actions">
+        <span style="font-size:.9em;color:var(--ink2)">性別</span>
+        <div class="seg" id="sexSeg"><button class="on" data-x="1">男</button><button data-x="0">女</button></div>
+        <button class="primary" id="btnCustomQuiz">用這盤出題</button>
+        <button class="ghost" id="btnCustomReveal">直接看解析</button>
+        <button class="ghost" id="btnPreset">載入 壬申 辛亥 丁亥 戊申</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 藏干 trainer -->
+<section class="panel" id="hiddenPanel" hidden>
+  <div class="controls" style="margin-bottom:8px">
+    <div class="eyebrow">地支藏干 <span id="hNo"></span></div>
+    <div class="seg" id="hDirSeg">
+      <button class="on" data-dir="mix">隨機混合</button>
+      <button data-dir="fwd">支→干</button>
+      <button data-dir="rev">干→支（反推）</button>
+    </div>
+  </div>
+  <div class="bigbranch">
+    <div class="ch" id="hBranch">寅</div>
+    <div class="info" id="hInfo"></div>
+  </div>
+  <form id="hiddenForm">
+    <div class="q" id="hFwd">
+      <div class="title"><h3>這個地支藏了哪些天干？全選才得分</h3><span class="pts">10 分（順序另加 5）</span></div>
+      <div class="opts" id="hOpts"></div>
+      <div class="hint">選完再排順序：本氣先、中氣次、餘氣末。點選的先後就是你的順序。</div>
+      <div class="hidanswer" id="hPicked"></div>
+    </div>
+    <div class="q" id="hRev" hidden>
+      <div class="title"><h3>這組藏干是哪一個地支？</h3><span class="pts">15 分</span></div>
+      <div class="opts" id="hBrOpts"></div>
+      <div class="hint">藏干已打亂順序。先看有沒有戊土、有幾個字，再想季節。</div>
+    </div>
+    <div class="actions">
+      <button class="primary" type="submit">送出</button>
+      <button class="ghost" type="button" id="hSkip">換一個</button>
+    </div>
+  </form>
+  <div id="hResult" hidden>
+    <div class="verdict"><div><div class="eyebrow">正解</div><div class="hidanswer" id="hAnswer"></div></div><div><div class="eyebrow" style="text-align:right">得分</div><div class="gain" id="hGain"></div></div></div>
+    <p id="hNote" style="margin:0;font-size:.95em"></p>
+    <div class="actions"><button class="primary" id="hNext">下一個</button></div>
+  </div>
+  <details>
+    <summary>十二地支藏干總表（背這張就夠）</summary>
+    <div class="hidtable" id="hidTable"></div>
+    <p class="hint">記法：四正（子午卯酉）只藏一或二字，氣最純；四生（寅申巳亥）各藏三字，本氣＋所生＋戊土；四庫（辰戌丑未）本氣土、中氣是前一季的餘氣、餘氣是本季墓庫所藏。</p>
+  </details>
+</section>
+
+<section class="panel" id="chartPanel">
+  <div class="eyebrow">命盤 <span id="qNo"></span></div>
+  <div class="chart" id="chart"></div>
+  <div class="meta" id="meta"></div>
+  <div id="luckBox" hidden>
+    <div class="eyebrow" style="margin-top:14px">大運 <span id="luckInfo"></span></div>
+    <div class="luck" id="luck"></div>
+  </div>
+</section>
+
+<section class="panel" id="quizPanel">
+  <form id="quiz">
+    <div id="secStrength">
+      <div class="q">
+        <div class="title"><h3>一、得令：日主在月令的狀態</h3><span class="pts">20 分</span></div>
+        <div class="opts" id="qLing"></div>
+        <div class="hint">當令者旺、令所生者相、生令者休、剋令者囚、令所剋者死。</div>
+      </div>
+      <div class="q">
+        <div class="title"><h3>二、得地：日主在地支有沒有根</h3><span class="pts">15 分</span></div>
+        <div class="opts" id="qRoot"></div>
+        <div class="hint">本氣根 &gt; 中氣根 &gt; 餘氣根。只看藏干裡有沒有與日主同五行的字。</div>
+      </div>
+      <div class="q">
+        <div class="title"><h3>三、綜合強弱</h3><span class="pts">30 分（差一級給 15）</span></div>
+        <div class="opts" id="qLevel"></div>
+        <div class="opts" style="margin-top:8px" id="qCong"></div>
+        <div class="hint">從格的判斷點不是日主多弱，是有沒有一絲有根的生機。</div>
+      </div>
+      <div class="q">
+        <div class="title"><h3>四、用神、喜神、忌神</h3><span class="pts">15 ＋ 10 ＋ 10 分</span></div>
+        <div class="group"><div class="eyebrow">用神</div><div class="opts" id="qYong"></div></div>
+        <div class="group"><div class="eyebrow">喜神（生助用神者）</div><div class="opts" id="qXi"></div></div>
+        <div class="group"><div class="eyebrow">第一忌神</div><div class="opts" id="qJi"></div></div>
+      </div>
+    </div>
+    <div id="secPattern">
+      <div class="q">
+        <div class="title"><h3>五、格局：以月令取格</h3><span class="pts">20 分</span></div>
+        <div class="opts" id="qGe"></div>
+        <div class="hint">月支本氣透干取本氣；不透則看中氣、餘氣何者透；全不透仍以本氣為格。月令為比劫時論建祿、月刃、月劫。</div>
+      </div>
+      <div class="q">
+        <div class="title"><h3>六、順用或逆用</h3><span class="pts">10 分</span></div>
+        <div class="opts" id="qShun"></div>
+        <div class="hint">財官印食為吉神順用（生、護）；殺傷梟刃為凶神逆用（制、化）。</div>
+      </div>
+      <div class="q">
+        <div class="title"><h3>七、成格狀態</h3><span class="pts">15 分</span></div>
+        <div class="opts" id="qCheng"></div>
+        <div class="hint">破格之神看天干有沒有透；救應之神透干或藏在地支本氣、中氣都算。</div>
+      </div>
+    </div>
+    <div id="secLuck">
+      <div class="q">
+        <div class="title"><h3>八、大運喜忌：紅框的三步各判一次</h3><span class="pts">各 8 分</span></div>
+        <div id="qLuck"></div>
+        <div class="hint">先看用忌，再看大運支有沒有沖月支、日支，大運干有沒有合住日主或用神。</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="primary" type="submit" id="btnSubmit">送出判斷</button>
+      <button class="ghost" type="button" id="btnSkip">換一盤</button>
+    </div>
+  </form>
+</section>
+
+<section class="panel" id="resultPanel" hidden>
+  <div class="verdict">
+    <div><div class="eyebrow">引擎判定</div><div class="big" id="rLevel"></div></div>
+    <div><div class="eyebrow" style="text-align:right">本題得分</div><div class="gain" id="rGain"></div></div>
+  </div>
+  <div id="rRows"></div>
+  <div id="rStrengthDetail">
+    <div class="gauge"><i id="gNeedle" style="left:50%"></i></div>
+    <div class="gauge-l"><span>極弱</span><span>偏弱</span><span>中和</span><span>偏強</span><span>極強</span></div>
+    <h2 style="margin-top:16px">三要素拆解</h2>
+    <div class="bd" id="rBd"></div>
+  </div>
+  <h2 style="margin-top:16px">推理筆記</h2>
+  <ul class="notes" id="rNotes"></ul>
+  <div class="actions">
+    <button class="primary" id="btnNext">下一題</button>
+  </div>
+</section>
+
+<details class="model panel">
+  <summary>這套引擎的模型參數（可核對、可質疑）</summary>
+  <p style="font-size:.95em;color:var(--ink2);margin:8px 0 0">教學用的加權近似，不是任何一家的正宗。刻意把三要素分開計分，讓你看到「月令一項就佔一半」是怎麼算出來的。跟你的老師或軟體不同時，以能解釋實際人生的那一套為準。</p>
+  <table>
+    <tr><th>得令</th><td>月支本氣對日主：比劫 +32、印 +22、食傷 −12、財 −18、官殺 −24。月支被沖 ×0.6。</td></tr>
+    <tr><th>得地</th><td>四支藏干逐字計：本氣 10、中氣 5、餘氣 3；乘位置權重 年 0.6、月 1.0、日 1.2、時 0.8；比劫 +1.0、印 +0.9、食傷 −0.6、財 −0.8、官殺 −1.0。</td></tr>
+    <tr><th>得勢</th><td>年月時三干：比劫 +10、印 +9、食傷 −6、財 −8、官殺 −10；有根 ×1.4、虛浮 ×0.6。</td></tr>
+    <tr><th>合局</th><td>三合、三會成局：助身 +18、剋洩 −18。半合、六合、天干合只在筆記提示，不計分。</td></tr>
+    <tr><th>分級</th><td>≤ −45 極弱｜−45～−12 偏弱｜−12～12 中和｜12～45 偏強｜≥ 45 極強。</td></tr>
+    <tr><th>從格</th><td>極弱且全局有根的比劫印星力量 &lt; 8 → 從弱候選；極強且有根的財官食傷 &lt; 8 → 從強候選。</td></tr>
+    <tr><th>用喜忌</th><td>身弱：財旺用比劫、官殺或食傷旺用印；用印而財透干者，財為第一忌（財壞印）。身強：印重用財、比劫重用官殺，食傷為次選。從弱：用最旺的剋洩之神；從強：用印比。中和：先取調候，再取財官。喜神＝次選之神。亥子丑月火為調候、巳午未月水為調候，用神選調候給半分。</td></tr>
+    <tr><th>格局</th><td>月支本氣透（年月時干）取本氣，否則中氣、餘氣何者透取之，皆不透取本氣。月令比劫：月令為日主臨官（祿）＝建祿、陽干帝旺＝月刃、其餘＝月劫。</td></tr>
+    <tr><th>成敗</th><td>破格之神只看天干透出；救應之神可透干、也可藏於任一地支的本氣或中氣。正官：忌傷官、七殺混雜，印救。七殺：食神制或印化為成，無則破。財格：忌比劫，官殺或食傷救。正印：忌財，比劫救。偏印：忌食神，財救。食神：忌偏印，財救。傷官：忌正官，印或財救。建祿月劫月刃：見財官食傷為成，全無則破。</td></tr>
+    <tr><th>大運</th><td>陽男陰女順排、陰男陽女逆排，從月柱起八步（起運歲數需生日，此處不算）。運干 0.4、運支 0.6 權重：用神 +1、喜神 +0.8、第一忌 −1、其他忌類 −0.5；運支沖月支 −0.3、沖日支 −0.2、運干合日主 −0.2。＞0.25 喜、＜−0.25 忌，其餘平。</td></tr>
+  </table>
+</details>
+
+<p class="foot">命盤隨機生成，年月與日時的干支遵守五虎遁、五鼠遁，都是真實可能出現的盤。</p>
+
+</section>
+
+<!-- ===== 通天塔 ===== -->
+<section class="tab" id="tab-tower" hidden>
+  <div class="sec-head"><div><h2>通天塔</h2><p>每個專業一座塔，1～999 層，越往上越難。挑戰模式計時、錯一題就結束；學習模式慢慢爬，錯了可以直接去讀那一章。</p></div></div>
+  <div id="towerRoot"></div>
+</section>
+
+<!-- ===== 排盤抽牌 ===== -->
+<section class="tab" id="tab-paipan" hidden>
+  <div class="sec-head"><div><h2>排盤與抽牌</h2><p>八字排盤、紫微排盤：國曆、農曆都能輸入。六爻起卦：擲幣、時間起卦、選卦都可以，自動裝卦。塔羅抽牌：選牌陣、洗牌翻牌。排好的都能帶去練習或互算。</p></div>
+    <div class="seg" id="toolSeg"><button class="on" data-tool="paipan" type="button">八字排盤</button><button data-tool="ziwei" type="button">紫微排盤</button><button data-tool="liuyao" type="button">六爻起卦</button><button data-tool="tarot" type="button">塔羅抽牌</button></div></div>
+  <div id="paipanRoot"><p class="muted">排盤引擎載入中…</p></div>
+  <div id="ziweiRoot" hidden></div>
+  <div id="liuyaoRoot" hidden></div>
+  <div id="tarotDrawRoot" hidden></div>
+</section>
+
+<!-- ===== 古籍庫 ===== -->
+<section class="tab" id="tab-classics" hidden>
+  <div class="sec-head"><div><h2>古籍庫</h2><p>八字、紫微、六爻九部經典的完整原文與白話註解；下方是課文引用過的段落，可以回到出處。</p></div></div>
+  <div id="gjRoot"></div>
+  <div id="classicsRoot"></div>
+</section>
+
+<!-- ===== 考照班 ===== -->
+<section class="tab" id="tab-exam" hidden>
+  <div class="sec-head"><div><h2>考照班培訓</h2><p>系統模擬考隨時可考；學苑考照題庫由老師匯入後出現在這裡。</p></div></div>
+  <div id="examRoot"></div>
+</section>
+
+<!-- ===== 真人模擬 ===== -->
+<section class="tab" id="tab-sim" hidden>
+  <div class="sec-head">
+    <div><h2>真人模擬</h2><p>AI 扮演上門的客人：有真實的盤、有沒說出口的背景、會追問也會質疑。結束後逐項評分。</p></div>
+    <div class="controls">
+      <select id="simTopic" aria-label="客人來問什麼">
+        <option value="">隨機問題</option><option>感情婚姻</option><option>事業轉職</option><option>財運投資</option><option>健康家運</option><option>今年流年</option>
+      </select>
+      <select id="simMood" aria-label="客人類型">
+        <option value="普通">一般客人</option><option value="懷疑">半信半疑型</option><option value="焦慮">很焦慮型</option><option value="話少">話很少型</option>
+      </select>
+      <button class="primary" id="simStart" type="button">新客人上門</button>
+    </div>
+  </div>
+  <div class="simside">
+    <div>
+      <div class="panel" id="simChartPanel">
+        <div class="eyebrow">客人命盤</div>
+        <div class="chart" id="simChart"></div>
+        <div class="meta" id="simMeta"></div>
+        <details class="inline"><summary>偷看引擎判定（會扣 10 分）</summary><div id="simPeek" class="muted" style="margin-top:6px"></div></details>
+      </div>
+      <div class="list" id="simHistory"></div>
+    </div>
+    <div>
+      <div class="chat" id="simChat"><div class="bubble sys">按「新客人上門」開始。</div></div>
+      <div class="chatbox">
+        <textarea id="simInput" placeholder="你對客人說的話…" disabled></textarea>
+        <button class="primary" id="simSend" type="button" disabled>說</button>
+      </div>
+      <div class="actions"><button class="ghost" id="simEnd" type="button" disabled>結束諮詢並評分</button><button class="ghost" id="simStop" type="button" hidden>停止</button></div>
+      <div class="eval" id="simEval" hidden></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 互算配對 ===== -->
+<section class="tab" id="tab-match" hidden>
+  <div class="sec-head">
+    <div><h2>真人互算配對</h2><p>把自己的盤貼出來讓同學算，你也去算別人的。被算的人給星等回饋，這是最接近實戰的練習。</p></div>
+    <div class="seg" id="matchFilter"><button class="on" data-f="open">等人算</button><button data-f="mine">我貼的</button><button data-f="done">我算過的</button></div>
+  </div>
+  <details class="panel" id="matchPost">
+    <summary style="font-weight:700;color:var(--ink);font-size:1em">＋ 貼一張盤讓大家算</summary>
+    <form class="form" id="matchForm" style="margin-top:12px">
+      <label class="field">術數<select id="mArt"></select></label>
+      <label class="field">性別<select id="mSex"><option>男</option><option>女</option></select></label>
+      <label class="field full">命盤資料（四柱、紫微命宮主星、卦象等，不要填真名）<textarea id="mChart" required placeholder="例：壬申 辛亥 丁亥 戊申"></textarea></label>
+      <label class="field full">想問的事<textarea id="mQuestion" required placeholder="例：今年適合轉職嗎？"></textarea></label>
+      <div class="actions full"><button class="primary" type="submit">貼出去</button><button class="ghost" type="button" id="mUsePractice">帶入練習題的盤</button></div>
+    </form>
+  </details>
+  <div class="list" id="matchList"></div>
+</section>
+
+<!-- ===== 老師與預約 ===== -->
+<section class="tab" id="tab-consult" hidden>
+  <div class="sec-head">
+    <div><h2>老師與預約</h2><p>通過審核的老師才會公開。客人送出預約，老師確認後依老師提供的方式付款與諮詢。</p></div>
+  </div>
+  <div class="notice info">預約時直接用點數付款；老師確認前取消會全額退點。聯絡方式只有你預約的老師看得到。請不要在平台上填生辰等個人隱私，細節在老師確認後私下提供。</div>
+  <div class="grid" id="teacherList"></div>
+  <h2 style="margin-top:22px;font-size:18px">預約紀錄</h2>
+  <div class="list" id="bookingList"></div>
+  <details class="panel" style="margin-top:18px" id="teacherApply">
+    <summary style="font-weight:700;color:var(--ink);font-size:1em">申請成為老師 / 編輯我的老師資料</summary>
+    <form class="form" id="teacherForm" style="margin-top:12px">
+      <label class="field">稱號<input id="tName" required maxlength="20" placeholder="例：竣方老師"></label>
+      <label class="field">每次諮詢價格（點數，1 點 = 1 元）<input id="tPrice" type="number" min="0" step="100" required placeholder="1200"></label>
+      <label class="field">擅長術數（逗號分隔）<input id="tArts" required placeholder="紫微斗數, 六爻"></label>
+      <label class="field">諮詢方式<select id="tMode"><option>線上</option><option>擺攤現場</option><option>線上與現場都可</option></select></label>
+      <label class="field full">介紹<textarea id="tIntro" required maxlength="400" placeholder="學習背景、擅長問題、風格"></textarea></label>
+      <div class="actions full"><button class="primary" type="submit">送出</button><span class="muted" id="tState"></span></div>
+    </form>
+  </details>
+</section>
+
+<!-- ===== 擺攤與貼文 ===== -->
+<section class="tab" id="tab-tools" hidden>
+  <div id="toolsRoot"></div>
+</section>
+
+<section class="tab" id="tab-leads" hidden>
+  <div class="sec-head">
+    <div><h2>擺攤與命理貼文</h2><p>每天自動巡查網路與 Threads 公開貼文；命理相關的討論、求算、徵老師，和市集招商、攤位資訊都收在這裡。</p></div>
+    <span class="muted" id="leadsUpdated"></span>
+  </div>
+  <div class="filters">
+    <div class="seg" id="leadKind"><button class="on" data-k="">全部</button><button data-k="擺攤">擺攤</button><button data-k="命理貼文">命理貼文</button></div>
+    <select id="leadCity" aria-label="地區"><option value="">全部地區</option></select>
+    <select id="leadMark" aria-label="我的標記"><option value="">全部</option><option value="none">還沒看</option><option value="有興趣">有興趣</option><option value="已聯繫">已聯繫</option><option value="略過">略過</option></select>
+    <input id="leadSearch" type="search" placeholder="搜尋關鍵字">
+  </div>
+  <div class="list" id="leadList"></div>
+  <details class="panel" style="margin-top:18px" id="leadAdd" hidden>
+    <summary style="font-weight:700;color:var(--ink);font-size:1em">＋ 手動新增一則（管理員）</summary>
+    <form class="form" id="leadForm" style="margin-top:12px">
+      <label class="field">類型<select id="lKind"><option>擺攤</option><option>命理貼文</option></select></label>
+      <label class="field">地區<input id="lCity" placeholder="台中"></label>
+      <label class="field full">標題<input id="lTitle" required></label>
+      <label class="field full">摘要<textarea id="lSummary"></textarea></label>
+      <label class="field">活動日期<input id="lDate" placeholder="2026-10-12"></label>
+      <label class="field">來源<select id="lSource"><option>FB社團</option><option>Threads</option><option>網頁</option><option>朋友介紹</option></select></label>
+      <label class="field full">連結<input id="lUrl" type="url" placeholder="https://"></label>
+      <div class="actions full"><button class="primary" type="submit">新增</button></div>
+    </form>
+  </details>
+</section>
+
+<section class="tab" id="tab-shop" hidden>
+  <div class="sec-head"><div><h2>金幣商店</h2><p>1 金幣＝新台幣 1 元。每天簽到、做每日任務、爬通天塔賺金幣，拿來解鎖課程、古籍、稱號與道具。</p></div></div>
+  <div id="shopRoot"></div>
+</section>
+
+<section class="tab" id="tab-wallet" hidden>
+  <div class="sec-head"><div><h2>我的點數</h2><p>1 點 = 新台幣 1 元。預約老師用點數付款；老師確認前取消會全額退點。</p></div>
+    <div class="kpi" style="min-width:160px"><b id="walletBal">0</b><span>目前點數</span></div></div>
+  <p class="notice info" id="pendingOrders" style="display:block"></p>
+  <h2 style="font-size:18px">儲值方案</h2>
+  <div class="grid" id="packages"></div>
+  <p class="muted">付款由綠界科技處理，支援信用卡、ATM、超商代碼。付款完成後自動入帳。今天已使用 AI <b id="aiUsed">0</b> 次。</p>
+  <div id="earnBox" hidden>
+    <h2 style="font-size:18px;margin-top:22px">我的諮詢收入（老師）</h2>
+    <p class="muted">未撥款合計 <b id="earnSum">0</b> 元，平台每月結算撥款一次。</p>
+    <div class="tblwrap" id="earnList"></div>
+  </div>
+  <h2 style="font-size:18px;margin-top:22px">點數明細</h2>
+  <div class="tblwrap" id="ledger"></div>
+</section>
+
+<!-- ===== 後台 ===== -->
+<section class="tab" id="tab-admin" hidden>
+  <div class="sec-head"><div><h2>管理後台</h2><p id="adMembers"></p></div></div>
+  <div class="panel"><h3>老師審核</h3><div class="tblwrap"><table class="tbl"><thead><tr><th>稱號</th><th>術數</th><th class="num">價格</th><th>狀態</th><th></th></tr></thead><tbody id="adPending"></tbody></table></div></div>
+  <div class="panel"><h3>老師結算（未撥款）</h3><p class="muted" id="adBookings"></p><div class="tblwrap"><table class="tbl"><thead><tr><th>老師</th><th class="num">場次</th><th class="num">平台抽成</th><th class="num">應撥</th><th></th></tr></thead><tbody id="adSettle"></tbody></table></div></div>
+  <div class="panel"><h3>手動調整點數</h3>
+    <form class="form" id="adAdjust"><label class="field">會員<select id="adUser"></select></label><label class="field">加減點數（負數為扣）<input id="adDelta" type="number" required></label><label class="field full">原因<input id="adNote" maxlength="60" placeholder="例：活動贈點、客訴補償"></label><div class="actions full"><button class="primary" type="submit">送出</button></div></form></div>
+  <div class="panel"><h3>手動調整金幣</h3><p class="muted">學員轉帳後 LINE 私訊你「名稱＋會員編號＋金額」，在這裡找到他、輸入金額送出就好（1 元＝1 金幣）。</p>
+    <form class="form" id="adCoins"><label class="field">找會員（名稱或會員編號）<input id="adCFind" placeholder="例：小明 或 A1B2C3" autocomplete="off"></label><label class="field">會員<select id="adCUser"></select></label><p class="muted full" id="adCBal"></p><label class="field">加減金幣（負數為扣）<input id="adCDelta" type="number" required placeholder="例：1000"></label><label class="field">原因<input id="adCNote" maxlength="60" placeholder="例：LINE 轉帳 1000 元"></label><div class="actions full"><button class="primary" type="submit">送出</button></div></form>
+    <h4 style="margin:14px 0 6px">最近的金幣異動</h4><div class="tblwrap"><table class="tbl"><thead><tr><th>時間</th><th>會員</th><th class="num">金幣</th><th>原因</th></tr></thead><tbody id="adCLog"></tbody></table></div></div>
+  <div class="panel"><h3>平台設定</h3>
+    <form class="form" id="adSettings"><label class="field">平台抽成（%）<input id="adCommission" type="number" min="0" max="100" step="1"></label><span></span>
+      <label class="field">AI 每日次數（沒儲值過）<input id="adAiFree" type="number" min="0"></label><label class="field">AI 每日次數（儲值過）<input id="adAiPaid" type="number" min="0"></label>
+      <label class="field full">儲值方案（JSON）<textarea id="adPackages" style="font-family:ui-monospace,monospace;min-height:120px"></textarea></label>
+      <div class="actions full"><button class="primary" type="submit">儲存設定</button></div></form></div>
+</section>
+
+<!-- ===== 登入 ===== -->
+<div class="dlg" id="loginDlg" hidden role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="dlg-box">
+    <h2 id="loginTitle" style="margin:0 0 6px">登入命理道場</h2>
+    <p class="muted" style="margin:0 0 12px">第一次登入會自動建立帳號。</p>
+    <form id="loginForm" class="list">
+      <label class="field">Email<input id="loginEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+      <button class="primary" type="submit">寄登入連結給我</button>
+    </form>
+    <button class="ghost" id="loginGoogle" type="button" style="width:100%;margin-top:8px">用 Google 帳號登入</button>
+    <p class="muted" id="loginMsg" role="status"></p>
+    <button class="ghost tiny" id="loginClose" type="button">關閉</button>
+  </div>
+</div>
+<div class="dlg" id="renameBox" hidden role="dialog" aria-modal="true">
+  <div class="dlg-box"><form id="renameForm" class="list"><label class="field">顯示名稱<input id="renameInput" maxlength="20" required></label>
+    <div class="actions"><button class="primary" type="submit">儲存</button><button class="ghost" id="renameCancel" type="button">取消</button></div></form></div>
+</div>
+
+<p class="app-foot">命理道場・命理學習與諮詢平台。命理諮詢內容僅供參考，不取代醫療、法律、投資等專業意見。<span id="contactLine"></span></p>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/learn-core.js"></script>
+<script src="js/learn-bazi.js"></script>
+<script src="js/learn-tarot.js"></script>
+<script src="js/ziwei.js"></script>
+<script src="js/liuyao.js"></script>
+<script src="js/learn-ziwei.js"></script>
+<script src="js/learn-liuyao.js"></script>
+<script src="js/learn-qimen.js"></script>
+<script src="js/learn-exam.js"></script>
+<script src="js/learn-classics.js"></script>
+<script src="js/gujilib.js"></script>
+<script src="js/vendor/lunar.js" data-lunar></script>
+<script src="js/paipan.js"></script>
+<script src="js/drill.js"></script>
+<script src="js/toolgate.js"></script>
+<script src="js/tower.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/app.js"></script>
+<script src="js/nav.js"></script>
+<script>document.getElementById('contactLine').textContent=(window.MDJ_CONFIG&&MDJ_CONFIG.CONTACT)?'　'+MDJ_CONFIG.CONTACT:'';</script>
+</body>
+</html>

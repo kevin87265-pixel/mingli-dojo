@@ -769,3 +769,16 @@ html{background:#eceef2}
 .sp-buy p{margin:4px 0}
 .sp-buyid{display:flex;flex-wrap:wrap;gap:8px 16px;background:var(--soft,#faf7f0);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
 .sp-buyid b{font-size:1.1em;letter-spacing:.05em}
+/* 選項排版：最後一排不留空，選項文字不會只剩一兩個字掉到下一行 */
+.ln-opts,.ln-opts.short,.ln-opts.stem,.ln-opts.god{display:flex!important;flex-wrap:wrap;gap:8px}
+.ln-opts>.ln-opt{flex:1 1 100%;min-width:0;text-wrap:pretty}
+.ln-opts.short>.ln-opt{flex:1 1 calc(50% - 8px)}
+.ln-opts.god>.ln-opt{flex:1 1 calc(33.333% - 8px)}
+.ln-opts.stem>.ln-opt{flex:1 1 calc(20% - 8px)}
+.ln-opts.short:has(>.ln-opt:nth-child(3):last-child)>.ln-opt{flex-basis:calc(33.333% - 8px)}
+.ln-opts.god:has(>.ln-opt:nth-child(4):last-child)>.ln-opt,.ln-opts.god:has(>.ln-opt:nth-child(2):last-child)>.ln-opt{flex-basis:calc(50% - 8px)}
+.ln-opts.stem:has(>.ln-opt:nth-child(4):last-child)>.ln-opt{flex-basis:calc(50% - 8px)}
+.ln-opts.tw-tfopts>.ln-opt{flex:1 1 calc(50% - 10px)}
+@media (min-width:640px){.ln-opts.short>.ln-opt{flex-basis:calc(25% - 8px)}.ln-opts.short:has(>.ln-opt:nth-child(3):last-child)>.ln-opt{flex-basis:calc(33.333% - 8px)}}
+.ln-q,.ln-opt,.ln-explain,.ln-article p,.ln-article li,.ln-article td{text-wrap:pretty}
+.ln-opts.short>.ln-opt,.ln-opts.god>.ln-opt,.ln-opts.stem>.ln-opt{text-wrap:balance}

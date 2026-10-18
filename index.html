@@ -41,6 +41,7 @@
     <button data-tab="shop">商店</button>
     <button data-tab="wallet">點數</button>
     <button data-tab="admin" id="tabAdmin" hidden>後台</button>
+    <button data-tab="me">我的</button>
   </nav>
 </div>
 
@@ -49,16 +50,13 @@
 
 <!-- ===== 總覽 ===== -->
 <section class="tab" id="tab-home">
-  <div class="hm-hero"><div><div class="eyebrow">神奇身心靈學苑・命理道場</div><h2 id="homeHello">歡迎回來</h2><p id="homeSub">今天從哪裡開始？</p></div><div class="kpis hm-kpis">
-    <div class="kpi"><b id="kLearn">0%</b><span>課文已讀</span></div>
-    <div class="kpi"><b id="kPass">0%</b><span>練習過關</span></div>
-    <div class="kpi"><b id="kScore">0</b><span>旺衰道場總分</span></div>
-    <div class="kpi"><b id="kExam">–</b><span>模擬考最佳</span></div>
-  </div></div>
-  <h3 class="hm-h">課程進度</h3>
+  <div class="hm-hero"><div><div class="eyebrow">神奇身心靈學苑・命理道場</div><h2 id="homeHello">歡迎回來</h2><p id="homeSub">今天從哪裡開始？</p></div><div class="hm-line"><span>課文 <b id="kLearn">0%</b></span><span>練習 <b id="kPass">0%</b></span><span>總分 <b id="kScore">0</b></span><span>模擬考 <b id="kExam">–</b></span></div>
+  <button class="hm-go" id="homeGo" type="button" data-go="learn" data-course="bazi1">開始上課：八字初階 第 1 課</button></div>
+  <h3 class="hm-h">我的課程</h3>
   <div id="homeCourses"></div>
-  <h3 class="hm-h">一條龍</h3>
-  <div class="flow" id="flow">
+  <button class="ghost hm-all" type="button" data-go="learn">看全部課程</button>
+  <h3 class="hm-h" hidden>一條龍</h3>
+  <div class="flow" id="flow" hidden>
     <button data-go="learn">① 學習</button><span>→</span>
     <button data-go="practice">② 練習</button><span>→</span>
     <button data-go="paipan">③ 排盤抽牌</button><span>→</span>
@@ -68,29 +66,30 @@
     <button data-go="consult">⑦ 接案諮詢</button><span>→</span>
     <button data-go="leads">⑧ 出攤資訊</button>
   </div>
-  <h3 class="hm-h">動態</h3>
-  <div class="grid hm-grid">
+  <h3 class="hm-h" id="homeDynH">動態</h3>
+  <div class="grid hm-grid" id="homeDyn">
     <div class="card"><div class="hm-ctop"><h3>最近成績</h3><button class="ghost tiny" data-go="exam" type="button">考照班</button></div><div class="list slim" id="homeExams"></div></div>
     <div class="card"><div class="hm-ctop"><h3>等你來算</h3><button class="ghost tiny" data-go="match" type="button">互算配對<span class="n" id="kMatch" hidden></span></button></div><div class="list slim" id="homeMatch"></div></div>
-    <div class="card"><div class="hm-ctop"><h3>最新擺攤資訊</h3><button class="ghost tiny" data-go="leads" type="button">看板<span class="n" id="kLeads" hidden></span></button></div><div class="list slim" id="homeLeads"></div></div>
+    <div class="card" hidden><div class="hm-ctop"><h3>最新擺攤資訊</h3><button class="ghost tiny" data-go="leads" type="button">看板<span class="n" id="kLeads" hidden></span></button></div><div class="list slim" id="homeLeads"></div></div>
     <div class="card"><div class="hm-ctop"><h3>我的預約</h3><button class="ghost tiny" data-go="consult" type="button">老師與預約</button></div><div class="list slim" id="homeBookings"></div></div>
   </div>
 </section>
 
 <!-- ===== 學習 ===== -->
 <section class="tab" id="tab-learn" hidden>
-  <div class="sec-head"><div><h2>學習</h2><p>八字、塔羅、紫微斗數、六爻、奇門遁甲各分初階與進階；八字、塔羅免費，紫微、六爻、奇門第一課免費，之後用金幣一課一課解鎖。讀完一課按「標記已讀」，再到「練習」做題。進度存在你的帳號裡。</p></div></div>
+  <div class="sec-head"><div><h2>學習</h2><p>讀完一課按「標記已讀」，再去練習做題。</p></div></div>
   <div id="courses"></div>
 </section>
 
 <!-- ===== 練習 ===== -->
 <section class="tab" id="tab-practice" hidden>
-  <div class="sec-head"><div><h2>練習</h2><p>每一課都有隨機題，10 題答對 8 題過關；題目每次都不一樣。下面還有「計時挑戰」（手動排盤、手動起卦、排行榜）和綜合練習「旺衰道場」。</p></div><button type="button" class="ghost" id="toDrill">⏱ 計時挑戰與排行榜</button></div>
-  <div id="practiceCourses"></div>
-  <h2 id="drillH" class="ln-arth" style="margin-top:24px">計時挑戰：手動排盤・手動起卦</h2>
+  <div class="sec-head"><div><h2>練習</h2><p>每課 10 題，答對 8 題過關。</p></div><button type="button" class="ghost" id="toDrill" hidden>計時挑戰與排行榜</button></div>
+  <div class="pg-course" id="practiceCourses"></div>
+  <div class="pg-drill"><h2 id="drillH" class="ln-arth" style="margin-top:24px">手動排盤・手動起卦</h2>
   <p class="muted" id="drillP">不靠排盤軟體，自己一格一格算出來。全部答對才計時上榜，答錯每格罰 15 秒並告訴你怎麼算。登入後成績才會上排行榜。</p>
-  <div id="drillRoot"></div>
-  <h2 id="dojo" class="ln-arth" style="margin-top:24px">綜合練習：旺衰道場</h2>
+  <div id="drillRoot"></div></div>
+  <div class="pg-dojo">
+  <h2 id="dojo" class="ln-arth" style="margin-top:24px">旺衰道場</h2>
 
 <section class="panel"><div class="sec-head" style="margin:0"><div><h2>你的成績</h2><p>地支藏干、旺衰喜用、格局成敗、大運喜忌。成績會同步到你的帳號。</p></div>
   <div class="stats"><div><b id="stTotal">0</b><span>總分</span></div><div><b id="stAcc">–</b><span>強弱命中率</span></div><div><b id="stStreak">0</b><span>連續命中</span></div></div></div></section>
@@ -280,41 +279,44 @@
 
 <p class="foot">命盤隨機生成，年月與日時的干支遵守五虎遁、五鼠遁，都是真實可能出現的盤。</p>
 
+</div>
 </section>
 
 <!-- ===== 通天塔 ===== -->
 <section class="tab" id="tab-tower" hidden>
-  <div class="sec-head"><div><h2>通天塔</h2><p>每個專業一座塔，1～999 層，越往上越難。挑戰模式計時、錯一題就結束；學習模式慢慢爬，錯了可以直接去讀那一章。</p></div></div>
+  <div class="sec-head"><div><h2>通天塔</h2><p>一個專業一座塔，越往上越難；挑戰模式錯一題就結束。</p></div></div>
   <div id="towerRoot"></div>
 </section>
 
 <!-- ===== 排盤抽牌 ===== -->
-<section class="tab" id="tab-paipan" hidden>
-  <div class="sec-head"><div><h2>排盤與抽牌</h2><p>八字排盤、紫微排盤：國曆、農曆都能輸入。六爻起卦：擲幣、時間起卦、選卦都可以，自動裝卦。塔羅抽牌：選牌陣、洗牌翻牌。排好的都能帶去練習或互算。</p></div>
+<section class="tab" id="tab-paipan" data-tool="paipan" hidden>
+  <div class="sec-head"><div><h2>排盤</h2><p>國曆、農曆都能輸入，排盤免費。</p></div>
     <div class="seg" id="toolSeg"><button class="on" data-tool="paipan" type="button">八字排盤</button><button data-tool="ziwei" type="button">紫微排盤</button><button data-tool="liuyao" type="button">六爻起卦</button><button data-tool="tarot" type="button">塔羅抽牌</button></div></div>
   <div id="paipanRoot"><p class="muted">排盤引擎載入中…</p></div>
   <div id="ziweiRoot" hidden></div>
+  <div class="pp-frame" id="zwFrameBox" hidden><iframe id="zwFrame" title="紫微排盤" loading="lazy" data-src="ziwei-pan.html"></iframe></div>
   <div id="liuyaoRoot" hidden></div>
+  <div class="pp-frame" id="lyFrameBox" hidden><iframe id="lyFrame" title="六爻卦館" loading="lazy" allow="accelerometer; gyroscope; vibrate" data-src="https://kevin87265-pixel.github.io/magic-tools/guaguan.html"></iframe></div>
   <div id="tarotDrawRoot" hidden></div>
 </section>
 
 <!-- ===== 古籍庫 ===== -->
 <section class="tab" id="tab-classics" hidden>
-  <div class="sec-head"><div><h2>古籍庫</h2><p>八字、紫微、六爻九部經典的完整原文與白話註解；下方是課文引用過的段落，可以回到出處。</p></div></div>
+  <div class="sec-head"><div><h2>古籍庫</h2><p>九部經典的原文與白話註解。</p></div></div>
   <div id="gjRoot"></div>
   <div id="classicsRoot"></div>
 </section>
 
 <!-- ===== 考照班 ===== -->
 <section class="tab" id="tab-exam" hidden>
-  <div class="sec-head"><div><h2>考照班培訓</h2><p>系統模擬考隨時可考；學苑考照題庫由老師匯入後出現在這裡。</p></div></div>
+  <div class="sec-head"><div><h2>考照班</h2><p>模擬考隨時可以考。</p></div></div>
   <div id="examRoot"></div>
 </section>
 
 <!-- ===== 真人模擬 ===== -->
 <section class="tab" id="tab-sim" hidden>
   <div class="sec-head">
-    <div><h2>真人模擬</h2><p>AI 扮演上門的客人：有真實的盤、有沒說出口的背景、會追問也會質疑。結束後逐項評分。</p></div>
+    <div><h2>真人模擬</h2><p>AI 扮演上門的客人，結束後逐項評分。</p></div>
     <div class="controls">
       <select id="simTopic" aria-label="客人來問什麼">
         <option value="">隨機問題</option><option>感情婚姻</option><option>事業轉職</option><option>財運投資</option><option>健康家運</option><option>今年流年</option>
@@ -350,7 +352,7 @@
 <!-- ===== 互算配對 ===== -->
 <section class="tab" id="tab-match" hidden>
   <div class="sec-head">
-    <div><h2>真人互算配對</h2><p>把自己的盤貼出來讓同學算，你也去算別人的。被算的人給星等回饋，這是最接近實戰的練習。</p></div>
+    <div><h2>真人互算配對</h2><p>貼自己的盤讓同學算，你也去算別人的。</p></div>
     <div class="seg" id="matchFilter"><button class="on" data-f="open">等人算</button><button data-f="mine">我貼的</button><button data-f="done">我算過的</button></div>
   </div>
   <details class="panel" id="matchPost">
@@ -369,9 +371,9 @@
 <!-- ===== 老師與預約 ===== -->
 <section class="tab" id="tab-consult" hidden>
   <div class="sec-head">
-    <div><h2>老師與預約</h2><p>通過審核的老師才會公開。客人送出預約，老師確認後依老師提供的方式付款與諮詢。</p></div>
+    <div><h2>老師與預約</h2><p>通過審核的老師才會公開。</p></div>
   </div>
-  <div class="notice info">預約時直接用點數付款；老師確認前取消會全額退點。聯絡方式只有你預約的老師看得到。請不要在平台上填生辰等個人隱私，細節在老師確認後私下提供。</div>
+  <div class="notice info slim">用點數付款，老師確認前取消全額退點。生辰等個人資料請等老師確認後再私下提供。</div>
   <div class="grid" id="teacherList"></div>
   <h2 style="margin-top:22px;font-size:18px">預約紀錄</h2>
   <div class="list" id="bookingList"></div>
@@ -395,7 +397,7 @@
 
 <section class="tab" id="tab-leads" hidden>
   <div class="sec-head">
-    <div><h2>擺攤與命理貼文</h2><p>每天自動巡查網路與 Threads 公開貼文；命理相關的討論、求算、徵老師，和市集招商、攤位資訊都收在這裡。</p></div>
+    <div><h2>擺攤與命理貼文</h2><p>每天自動整理市集招商和命理相關貼文。</p></div>
     <span class="muted" id="leadsUpdated"></span>
   </div>
   <div class="filters">
@@ -421,12 +423,12 @@
 </section>
 
 <section class="tab" id="tab-shop" hidden>
-  <div class="sec-head"><div><h2>金幣商店</h2><p>1 金幣＝新台幣 1 元。每天簽到、做每日任務、爬通天塔賺金幣，拿來解鎖課程、古籍、稱號與道具。</p></div></div>
+  <div class="sec-head"><div><h2>金幣商店</h2><p>簽到、做任務、爬塔賺金幣，1 金幣＝1 元。</p></div></div>
   <div id="shopRoot"></div>
 </section>
 
 <section class="tab" id="tab-wallet" hidden>
-  <div class="sec-head"><div><h2>我的點數</h2><p>1 點 = 新台幣 1 元。預約老師用點數付款；老師確認前取消會全額退點。</p></div>
+  <div class="sec-head"><div><h2>我的點數</h2><p>1 點＝1 元，用來預約老師。</p></div>
     <div class="kpi" style="min-width:160px"><b id="walletBal">0</b><span>目前點數</span></div></div>
   <p class="notice info" id="pendingOrders" style="display:block"></p>
   <h2 style="font-size:18px">儲值方案</h2>
@@ -477,6 +479,11 @@
     <div class="actions"><button class="primary" type="submit">儲存</button><button class="ghost" id="renameCancel" type="button">取消</button></div></form></div>
 </div>
 
+<!-- ===== 我的 ===== -->
+<section class="tab" id="tab-me" hidden>
+  <div class="sec-head"><div><h2>我的</h2></div></div>
+  <div class="me-hub" id="meHub"></div>
+</section>
 <p class="app-foot">命理道場・命理學習與諮詢平台。命理諮詢內容僅供參考，不取代醫療、法律、投資等專業意見。<span id="contactLine"></span></p>
 </main>
 

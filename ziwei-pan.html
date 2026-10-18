@@ -1,0 +1,891 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>紫微排盤</title>
+<meta name="color-scheme" content="light only">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap">
+<style>
+/* 版面：命盤為主角（星曜一欄一顆、亮度對齊）→ 盤下大限／流年／流月三排表格直接點 → 選宮細節（本宮→對宮→夾宮→三合）。淺色鎖死。 */
+:root{
+  color-scheme: light only;
+  --ground:#e9ecf1; --cell:#ffffff; --ink:#161b26; --mute:#5b6476; --line:#c3c9d4; --rule:#e4e7ed;
+  --ming:#b3261e; --lu:#14813b; --quan:#7a35a3; --ke:#1b5fc4; --ji:#c62828;
+  --da:#0f6fb8; --daBg:#e6f1fb; --nian:#c25e00; --nianBg:#fff1df; --yue:#a3307a; --yueBg:#fbe8f3;
+  --sel:#b3261e; --selBg:#fff6e0; --sfBg:#fbf3ea; --jiaBg:#f1f4f8;
+  --btn:#1f2a40; --jiInk:#0b7a5e; --shaInk:#2b2f38; --luInk:#9a6400; --adj:#6e7688;
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --fs:15px; --star:14px; --major:16px; --small:10.5px; --tiny:9.5px; --pname:14px;
+  --cs:var(--star); --cm:var(--major); --csm:var(--small); --ct:var(--tiny); --cp:var(--pname);
+}
+@media (prefers-color-scheme: dark){ :root, :root:not([data-theme="light"]){ color-scheme: light only;
+  --ground:#e9ecf1; --cell:#ffffff; --ink:#161b26; --mute:#5b6476; --line:#c3c9d4; --rule:#e4e7ed; --btn:#1f2a40;
+  --daBg:#e6f1fb; --nianBg:#fff1df; --yueBg:#fbe8f3; --selBg:#fff6e0; --sfBg:#fbf3ea; --jiaBg:#f1f4f8; }}
+:root[data-theme="dark"]{ color-scheme: light only; --ground:#e9ecf1; --cell:#ffffff; --ink:#161b26; --mute:#5b6476; --line:#c3c9d4; --rule:#e4e7ed; --btn:#1f2a40; --daBg:#e6f1fb; --nianBg:#fff1df; --yueBg:#fbe8f3; --selBg:#fff6e0; --sfBg:#fbf3ea; --jiaBg:#f1f4f8; }
+html.big{ --fs:18px; --star:17px; --major:19px; --small:13px; --tiny:11.5px; --pname:17px; --cs:var(--star); --cm:var(--major); --csm:var(--small); --ct:var(--tiny); --cp:var(--pname); }
+body{ background:var(--ground); color:var(--ink); font-family:var(--sans); font-size:var(--fs); -webkit-tap-highlight-color:transparent; }
+button{ font-family:inherit; }
+.wrap{ max-width:720px; margin:0 auto; padding-inline:6px; padding-block:10px 40px; display:flex; flex-direction:column; gap:8px; }
+.top{ display:flex; align-items:center; gap:6px; background:var(--cell); border:1px solid var(--line); border-radius:12px; padding:8px 10px; }
+.top .who{ flex:1; min-width:0; }
+.top .who b{ font-family:var(--serif); font-weight:900; font-size:18px; }
+.top .who div{ color:var(--mute); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pill{ border:1.5px solid var(--btn); background:var(--cell); color:var(--btn); border-radius:999px; padding:6px 11px; font-size:14px; font-weight:700; cursor:pointer; white-space:nowrap; }
+.pill.solid{ background:var(--btn); color:#fff; }
+.pill.on{ background:var(--btn); color:#fff; }
+form.box{ background:var(--cell); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:12px; }
+.row{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.row label.k{ font-weight:700; min-width:4.5em; }
+select,input[type=number],input[type=text]{ font:inherit; font-size:17px; padding:7px 8px; border:1.5px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); }
+select{ max-width:100%; }
+input[type=number]{ width:4.6em; } input.y{ width:5.8em; }
+.seg{ display:inline-flex; border:1.5px solid var(--btn); border-radius:9px; overflow:hidden; }
+.seg button{ font-size:16px; border:0; background:#fff; color:var(--btn); padding:7px 14px; cursor:pointer; }
+.seg button.on{ background:var(--btn); color:#fff; font-weight:700; }
+.go{ font-size:19px; font-weight:700; background:var(--ming); color:#fff; border:0; border-radius:10px; padding:12px; cursor:pointer; }
+details{ border-top:1px dashed var(--line); padding-top:8px; }
+summary{ cursor:pointer; color:var(--mute); font-weight:700; }
+details .row{ margin-top:10px; }
+.hint{ color:var(--mute); font-size:13px; }
+.err{ color:var(--ji); font-weight:700; }
+.status{ display:flex; align-items:center; gap:6px; font-size:14px; min-height:32px; padding-inline:4px; flex-wrap:wrap; }
+.tag{ border-radius:6px; padding:2px 8px; font-weight:700; font-size:14px; }
+.tag.ben{ background:#fbe9e7; color:var(--ming); }
+.tag.da{ background:var(--daBg); color:var(--da); }
+.tag.nian{ background:var(--nianBg); color:var(--nian); }
+.tag.yue{ background:var(--yueBg); color:var(--yue); }
+.status .back{ margin-left:auto; }
+.chartwrap{ position:relative; }
+.chart{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border:2px solid var(--ink); background:var(--ink); gap:1px; border-radius:4px; overflow:hidden; }
+.cell{ --cs:calc(var(--star)*var(--z,1)); --cm:calc(var(--major)*var(--z,1)); --csm:calc(var(--small)*var(--z,1)); --ct:calc(var(--tiny)*var(--z,1)); --cp:calc(var(--pname)*var(--z,1));
+  background:var(--cell); height:var(--cellH,150px); overflow:hidden; padding:3px 2px 2px; display:flex; flex-direction:column; gap:2px; cursor:pointer; position:relative; min-width:0; transition:background-color .18s; }
+html.big .cell{ height:auto; min-height:212px; }
+.cell.sf{ background:var(--sfBg); }
+.cell.jia{ background:var(--jiaBg); }
+.cell.sel{ background:var(--selBg); box-shadow:inset 0 0 0 2.5px var(--sel); }
+.cell .role{ font-size:var(--csm); font-weight:700; color:var(--sel); background:#fff; border:1px solid var(--sel); border-radius:4px; padding:0 3px; line-height:1.4; z-index:1; }
+.cell.jia .role{ color:#5b6476; border-color:#8a93a6; }
+.cell > *{ min-width:0; max-width:100%; flex-shrink:0; }
+.cell > .grow{ flex-shrink:1; }
+.center .nw{ white-space:nowrap; }
+.stars{ display:flex; flex-wrap:wrap; gap:3px 1px; align-items:flex-start; }
+.col{ display:flex; flex-direction:column; align-items:center; gap:1px; width:calc(var(--cs) + 3px); }
+.col.mj{ width:calc(var(--cm) + 3px); }
+.col .nm{ writing-mode:vertical-rl; text-orientation:upright; font-size:var(--cs); line-height:1.02; font-weight:700; }
+.col.mj .nm{ font-family:var(--serif); font-weight:900; color:var(--ming); font-size:var(--cm); }
+.col.ji .nm{ color:var(--jiInk); } .col.sha .nm{ color:var(--shaInk); } .col.lu .nm{ color:var(--luInk); }
+.col .br{ font-size:var(--ct); color:var(--mute); line-height:1.1; min-height:1.1em; }
+.hua{ font-size:var(--csm); color:#fff; border-radius:3px; width:1.35em; text-align:center; line-height:1.35; font-weight:700; }
+.hua.祿{background:var(--lu)} .hua.權{background:var(--quan)} .hua.科{background:var(--ke)} .hua.忌{background:var(--ji)}
+.hua.d{ background:var(--da); } .hua.n{ background:var(--nian); } .hua.m{ background:var(--yue); }
+.adj .th{ color:#c2185b; font-weight:700; }
+.adj span{ white-space:nowrap; }
+.adj{ font-size:var(--csm); color:var(--adj); line-height:1.3; display:flex; flex-wrap:wrap; gap:0 3px; }
+.ages span{ white-space:nowrap; }
+.ages{ font-size:var(--ct); color:var(--adj); line-height:1.3; font-variant-numeric:tabular-nums; }
+.flow{ display:flex; flex-wrap:wrap; gap:1px 2px; }
+.flow span{ font-size:var(--csm); font-weight:700; border-radius:3px; padding:0 2px; line-height:1.35; }
+.flow .d{ color:var(--da); border:1px solid var(--da); } .flow .n{ color:var(--nian); border:1px solid var(--nian); }
+.grow{ flex:1; }
+.foot{ display:grid; grid-template-columns:auto 1fr auto; align-items:end; font-size:var(--csm); line-height:1.25; border-top:1px solid var(--rule); padding-top:2px; gap:2px; }
+.foot .gz{ font-family:var(--serif); font-weight:900; font-size:var(--cp); color:var(--ink); }
+.foot .r{ text-align:right; color:var(--mute); font-variant-numeric:tabular-nums; }
+.names{ display:flex; flex-direction:column; align-items:center; gap:1px; min-width:0; }
+.pname{ font-family:var(--serif); font-weight:900; font-size:var(--cp); text-align:center; line-height:1.2; color:var(--ming); }
+.pname.ming{ color:#fff; background:var(--ming); border-radius:3px; padding:0 3px; }
+.shen{ color:#fff; background:#7a4b00; font-weight:700; font-size:var(--csm); border-radius:3px; padding:0 3px; }
+.xiao{ color:var(--nian); border:1px solid var(--nian); font-weight:700; font-size:var(--csm); border-radius:3px; padding:0 3px; }
+.limrow{ display:flex; flex-wrap:wrap; gap:1px; justify-content:center; }
+.lim{ font-size:var(--csm); font-weight:700; border-radius:3px; padding:0 3px; line-height:1.4; white-space:nowrap; }
+.lim.d{ color:var(--da); background:var(--daBg); } .lim.n{ color:var(--nian); background:var(--nianBg); } .lim.m{ color:var(--yue); background:var(--yueBg); }
+.lim.d.hi{ color:#fff; background:var(--da); } .lim.n.hi{ color:#fff; background:var(--nian); } .lim.m.hi{ color:#fff; background:var(--yue); }
+.center{ grid-column:2/4; grid-row:2/4; background:var(--cell); padding:10px 12px; display:flex; flex-direction:column; gap:3px; justify-content:center; font-size:calc(var(--fs) - 2px); min-width:0; position:relative; z-index:2; }
+.center > *{ text-shadow:0 0 3px #fff, 0 0 3px #fff; }
+.center .cn{ font-family:var(--serif); font-weight:900; font-size:calc(var(--fs) + 3px); }
+.center b{ font-weight:700; }
+.bazi{ display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:12px; font-family:var(--serif); font-weight:900; font-size:calc(var(--fs) + 2px); margin-top:4px; }
+.bazi span{ writing-mode:vertical-rl; text-orientation:upright; letter-spacing:.08em; }
+svg.lines{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:3; }
+svg.lines line{ stroke:var(--sel); stroke-width:1.8; stroke-linecap:round; opacity:.7; stroke-dasharray:6 4; }
+svg.lines line.opp{ stroke-dasharray:2 4; stroke-width:2.2; }
+svg.lines circle{ fill:var(--sel); }
+@media (prefers-reduced-motion:no-preference){ svg.lines g{ animation:fade .25s ease-out; } }
+@keyframes fade{ from{opacity:0} to{opacity:1} }
+.tl{ background:var(--cell); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+.tlrow{ display:grid; grid-template-columns:2.2em repeat(10,minmax(0,1fr)); border-bottom:1px solid var(--rule); }
+.tlrow.m{ grid-template-columns:2.2em repeat(6,minmax(0,1fr)); }
+.tlrow:last-child{ border-bottom:0; }
+.tlh{ display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; background:#f3f5f8; writing-mode:vertical-rl; letter-spacing:.1em; }
+.tlrow button{ border:0; border-left:1px solid var(--rule); background:#fff; padding:6px 0; font-size:12px; line-height:1.3; cursor:pointer; color:var(--ink); font-variant-numeric:tabular-nums; min-width:0; }
+html.big .tlrow button{ font-size:14px; }
+.tlrow button small{ display:block; color:var(--mute); font-size:11px; }
+html.big .tlrow button small{ font-size:12.5px; }
+.tlrow button.cur{ box-shadow:inset 0 -3px 0 #aab2c0; }
+.tlrow.da button.on{ background:var(--da); color:#fff; } .tlrow.nian button.on{ background:var(--nian); color:#fff; } .tlrow.m button.on{ background:var(--yue); color:#fff; }
+.tlrow button.on small{ color:#fff; }
+.legend{ display:flex; flex-wrap:wrap; gap:4px 12px; font-size:13px; color:var(--mute); align-items:center; padding-inline:4px; }
+.legend .hua{ display:inline-block; }
+.detail{ background:var(--cell); border:1px solid var(--line); border-radius:12px; padding:12px 12px; font-size:16px; line-height:1.7; }
+.detail .t{ font-family:var(--serif); font-weight:900; font-size:20px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.detail .k{ color:var(--mute); }
+.pc{ border:1px solid var(--rule); border-radius:10px; padding:8px 10px; display:flex; flex-direction:column; gap:2px; line-height:1.55; }
+.pc.main{ border-color:var(--sel); background:#fffaf0; }
+.pc h3{ margin:0; font-size:16px; display:flex; gap:6px; align-items:baseline; flex-wrap:wrap; cursor:pointer; }
+.pc h3 .lab{ font-size:12px; font-weight:700; color:#fff; background:var(--sel); border-radius:4px; padding:0 5px; }
+.pc h3 .lab.g{ background:#6b7385; }
+.pc h3 .pn{ font-family:var(--serif); font-weight:900; font-size:17px; }
+.pc h3 .gz{ color:var(--mute); font-size:13px; }
+.pc .mj{ font-family:var(--serif); font-weight:900; color:var(--ming); font-size:17px; }
+.pcgrid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.pcgrid .full{ grid-column:1/-1; }
+@media (max-width:420px){ .pcgrid{ grid-template-columns:1fr; } }
+.jiatag{ display:inline-block; border-radius:6px; padding:2px 8px; font-weight:700; font-size:14px; margin:2px 4px 2px 0; }
+.jiatag.x{ background:#fde8e6; color:var(--ji); } .jiatag.o{ background:#e3f4ec; color:var(--lu); }
+.steps{ color:var(--mute); font-size:13px; }
+.sec{ font-weight:700; color:var(--mute); }
+.cli{ background:var(--cell); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px; }
+.savebox{ display:flex; flex-direction:column; gap:8px; background:#f6f8fb; border-radius:10px; padding:10px; }
+.clilist{ display:flex; flex-direction:column; gap:6px; max-height:52vh; overflow-y:auto; }
+.ci{ display:flex; align-items:center; gap:8px; border:1px solid var(--rule); border-radius:10px; padding:8px 10px; }
+.ci .info{ flex:1; min-width:0; cursor:pointer; }
+.ci .info b{ font-size:17px; }
+.ci .info div{ color:var(--mute); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ci button{ border:1.5px solid var(--line); background:#fff; border-radius:8px; padding:5px 9px; font-size:14px; cursor:pointer; color:var(--ink); white-space:nowrap; }
+.ci button.del.arm{ border-color:var(--ji); background:var(--ji); color:#fff; }
+.ci.cur{ border-color:var(--sel); background:#fffaf0; }
+textarea{ font:inherit; font-size:14px; width:100%; box-sizing:border-box; border:1.5px solid var(--line); border-radius:8px; padding:8px; background:#fff; color:var(--ink); }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div class="who"><b id="whoName">紫微排盤</b><div id="whoLine">輸入生日後排盤</div></div>
+    <button class="pill" id="minorBtn" type="button">精簡</button>
+    <button class="pill" id="bigBtn" type="button">大字</button>
+    <button class="pill" id="cliBtn" type="button">客戶</button>
+    <button class="pill solid" id="editBtn" type="button">改生日</button>
+  </div>
+
+  <form class="box" id="f" autocomplete="off" hidden>
+    <div class="row">
+      <div class="seg" id="calSeg"><button type="button" data-v="solar" class="on">國曆</button><button type="button" data-v="lunar">農曆</button></div>
+      <div class="seg" id="genSeg"><button type="button" data-v="男" class="on">男</button><button type="button" data-v="女">女</button></div>
+      <input type="text" id="nm" placeholder="姓名（可空白）" style="flex:1;min-width:7em">
+    </div>
+    <div class="row">
+      <input type="number" class="y" id="yy" value="2000" min="1901" max="2099" aria-label="年"> 年
+      <input type="number" id="mm" value="1" min="1" max="12" aria-label="月"> 月
+      <input type="number" id="dd" value="1" min="1" max="31" aria-label="日"> 日
+      <label id="leapWrap" hidden><input type="checkbox" id="leap"> 閏月</label>
+    </div>
+    <div class="row">
+      <input type="number" id="hh" value="12" min="0" max="23" aria-label="時"> 時
+      <input type="number" id="mi" value="0" min="0" max="59" aria-label="分"> 分
+      <span class="hint">24 小時制，下午 3 點填 15</span>
+    </div>
+    <div id="msg" class="err" hidden></div>
+    <button class="go" type="submit">排盤</button>
+    <details>
+      <summary>流派設定</summary>
+      <div class="row"><label class="k">晚子時</label>
+        <select id="lateZi"><option value="next">23點後算隔天</option><option value="same">23點後仍算當天</option></select></div>
+      <div class="row"><label class="k">閏月</label>
+        <select id="leapMode"><option value="mid">15日前算本月，16日起算下月</option><option value="this">整個月算本月</option><option value="next">整個月算下月</option></select></div>
+      <div class="row"><label class="k">年界</label>
+        <select id="yearMode"><option value="lunar">正月初一換年</option><option value="lichun">立春換年</option></select></div>
+      <div class="row"><label class="k">流月起法</label>
+        <select id="yueMode"><option value="nian">流年命宮起正月（講義）</option><option value="doujun">斗君起正月（文墨）</option></select></div>
+      <div class="row"><label class="k">天馬</label>
+        <select id="tianma"><option value="year">依生年（文墨）</option><option value="month">依生月（星僑）</option></select></div>
+      <div class="row"><label class="k">庚年</label>
+        <select id="geng"><option value="a">陽祿 武權 陰科 同忌</option><option value="b">陽祿 武權 同科 陰忌</option><option value="c">陽祿 武權 同科 相忌</option></select></div>
+      <div class="row"><label class="k">戊年</label>
+        <select id="wu"><option value="a">貪祿 陰權 弼科 機忌</option><option value="b">貪祿 陰權 陽科 機忌</option></select></div>
+      <div class="row"><label class="k">壬年</label>
+        <select id="ren"><option value="a">梁祿 紫權 左科 武忌</option><option value="b">梁祿 紫權 府科 武忌</option></select></div>
+      <div class="row"><label class="k">天傷天使</label>
+        <select id="shangshi"><option value="fixed">天傷奴僕、天使疾厄</option><option value="yinyang">陰男陽女對調</option></select></div>
+      <div class="row"><label><input type="checkbox" id="ts"> 用真太陽時</label>
+        經度 <input type="number" id="lon" value="120.68" step="0.01" style="width:6em"></div>
+      <div class="hint">台北121.56　台中120.68　台南120.21　高雄120.30　花蓮121.60</div>
+    </details>
+  </form>
+
+  <section class="box cli" id="cli" hidden>
+    <div class="row" style="justify-content:space-between">
+      <b style="font-family:var(--serif);font-size:18px">客戶命盤存檔</b>
+      <button class="pill" id="cliClose" type="button">收起</button>
+    </div>
+    <div class="hint">資料只存在你這台裝置的這個瀏覽器，別人看不到。換手機、清除瀏覽器資料或用無痕模式會不見，請定期備份。</div>
+    <div id="cliWarn" class="err" hidden>這個瀏覽器不能存資料（可能是無痕模式），存檔功能暫時不能用。</div>
+    <div class="savebox">
+      <div class="row"><input type="text" id="cliName" placeholder="客戶名稱" style="flex:1;min-width:7em"></div>
+      <div class="row"><input type="text" id="cliNote" placeholder="備註（例如：問感情、朋友介紹）" style="flex:1;min-width:7em"></div>
+      <button class="go" id="cliSave" type="button" style="font-size:17px;padding:10px">把目前這張盤存起來</button>
+      <div id="cliMsg" class="hint" style="color:var(--lu);font-weight:700" hidden></div>
+    </div>
+    <div class="row"><input type="text" id="cliSearch" placeholder="搜尋名字或備註" style="flex:1;min-width:7em"></div>
+    <div id="cliList" class="clilist"></div>
+    <details id="bak">
+      <summary>備份與還原</summary>
+      <div class="row"><button class="pill solid" id="bakCopy" type="button">複製備份碼</button><span class="hint" id="bakCopyMsg"></span></div>
+      <textarea id="bakOut" readonly hidden rows="3"></textarea>
+      <div class="hint">把備份碼貼到 LINE 記事本或備忘錄保存。要還原時貼到下面：</div>
+      <textarea id="bakIn" rows="3" placeholder="貼上備份碼"></textarea>
+      <div class="row"><button class="pill" id="bakRestore" type="button">還原（加到現有名單）</button>
+        <label class="pill" style="cursor:pointer">用檔案還原<input type="file" id="bakFile" accept=".txt,.json,text/plain,application/json" hidden></label></div>
+      <div id="bakMsg" class="hint" style="font-weight:700"></div>
+    </details>
+  </section>
+
+  <div class="status" id="status"></div>
+  <div class="chartwrap" id="chartwrap">
+    <div class="chart" id="chart"></div>
+    <svg class="lines" id="lines" aria-hidden="true"></svg>
+  </div>
+  <div class="tl" id="tl"></div>
+  <div class="legend" id="legend"></div>
+  <section class="detail" id="detail"></section>
+</div>
+
+<script src="js/vendor/lunar.js"></script>
+<script>
+// 紫微斗數排盤核心（依文墨天機預設規則）
+(function (root) {
+const GAN = '甲乙丙丁戊己庚辛壬癸'.split('');
+const ZHI = '子丑寅卯辰巳午未申酉戌亥'.split('');
+const m12 = n => ((n % 12) + 12) % 12;
+const PALACES = ['命宮','兄弟','夫妻','子女','財帛','疾厄','遷移','奴僕','官祿','田宅','福德','父母'];
+// 六十甲子納音五行 -> 局
+const NAYIN = ['金','火','木','土','金','火','水','土','金','木','水','土','火','木','水','金','火','木','土','金','火','水','土','金','木','水','土','火','木','水'];
+const JU = { '水': 2, '木': 3, '金': 4, '土': 5, '火': 6 };
+const JU_NAME = { 2: '水二局', 3: '木三局', 4: '金四局', 5: '土五局', 6: '火六局' };
+function jiazi(g, z) { for (let i = 0; i < 60; i++) if (i % 10 === g && i % 12 === z) return i; return -1; }
+
+// 四化（文墨天機預設：庚 陽武陰同、戊 貪陰弼機、壬 梁紫左武）
+const SIHUA = {
+  0: ['廉貞','破軍','武曲','太陽'], 1: ['天機','天梁','紫微','太陰'],
+  2: ['天同','天機','文昌','廉貞'], 3: ['太陰','天同','天機','巨門'],
+  4: ['貪狼','太陰','右弼','天機'], 5: ['武曲','貪狼','天梁','文曲'],
+  6: ['太陽','武曲','太陰','天同'], 7: ['巨門','太陽','文曲','文昌'],
+  8: ['天梁','紫微','左輔','武曲'], 9: ['破軍','巨門','太陰','貪狼']
+};
+const HUA = ['祿','權','科','忌'];
+// 四化版本（可切換）
+const SIHUA_VAR = {
+  geng: { a: ['太陽','武曲','太陰','天同'], b: ['太陽','武曲','天同','太陰'], c: ['太陽','武曲','天同','天相'] },
+  wu:   { a: ['貪狼','太陰','右弼','天機'], b: ['貪狼','太陰','太陽','天機'] },
+  ren:  { a: ['天梁','紫微','左輔','武曲'], b: ['天梁','紫微','天府','武曲'] }
+};
+function sihuaList(gi, opt) {
+  opt = opt || {};
+  if (gi === 6) return SIHUA_VAR.geng[opt.geng || 'a'];
+  if (gi === 4) return SIHUA_VAR.wu[opt.wu || 'a'];
+  if (gi === 8) return SIHUA_VAR.ren[opt.ren || 'a'];
+  return SIHUA[gi];
+}
+
+// 亮度表（由寅宮起：寅卯辰巳午未申酉戌亥子丑）
+const BRIGHT = {
+  '紫微':'旺旺得旺廟廟旺旺得旺平廟', '天機':'得旺利平廟陷得旺利平廟陷',
+  '太陽':'旺廟旺旺旺得得平不陷陷不', '武曲':'得利廟平旺廟得利廟平旺廟',
+  '天同':'利平平廟陷不旺平平廟旺不', '廉貞':'廟平利陷平利廟平利陷平利',
+  '天府':'廟得廟得旺廟得旺廟得廟廟', '太陰':'旺陷陷陷不不利旺旺廟廟廟',
+  '貪狼':'平利廟陷旺廟平利廟陷旺廟', '巨門':'廟廟陷旺旺不廟廟陷旺旺不',
+  '天相':'廟陷得得廟得廟陷得得廟廟', '天梁':'廟廟廟陷廟旺陷得廟陷廟旺',
+  '七殺':'廟旺廟平旺廟廟旺廟平旺廟', '破軍':'得陷旺平廟旺得陷旺平廟旺',
+  '文昌':'陷利得廟陷利得廟陷利得廟', '文曲':'平旺得廟陷旺得廟陷旺得廟',
+  '火星':'廟利陷得廟利陷得廟利陷得', '鈴星':'廟利陷得廟利陷得廟利陷得',
+  '擎羊':'　陷廟　陷廟　陷廟　陷廟', '陀羅':'陷　廟陷　廟陷　廟陷　廟'
+};
+function bright(name, b) { const s = BRIGHT[name]; if (!s) return ''; const c = s[m12(b - 2)]; return c === '　' ? '' : c; }
+
+const CHANGSHENG = ['長生','沐浴','冠帶','臨官','帝旺','衰','病','死','墓','絕','胎','養'];
+const BOSHI = ['博士','力士','青龍','小耗','將軍','奏書','飛廉','喜神','病符','大耗','伏兵','官符'];
+const SUIQIAN = ['歲建','晦氣','喪門','貫索','官符','小耗','歲破','龍德','白虎','天德','弔客','病符'];
+const JIANGQIAN = ['將星','攀鞍','歲驛','息神','華蓋','劫煞','災煞','天煞','指背','咸池','月煞','亡神'];
+
+// 依年支三合分組 0:申子辰 1:巳酉丑 2:寅午戌 3:亥卯未
+function sanhe(z) { return [0,1,2,3,0,1,2,3,0,1,2,3][z]; }
+
+/**
+ * 輸入：{ y, m, d, h, mi, gender:'男'|'女', calendar:'solar'|'lunar', leap:bool,
+ *         lateZi:'next'|'same', leapMode:'mid'|'this'|'next', trueSolar:bool, lon:number }
+ */
+function buildChart(input, Lib) {
+  const { Solar, Lunar } = Lib;
+  let solar;
+  if (input.calendar === 'lunar') {
+    const lu = Lunar.fromYmdHms(input.y, input.leap ? -input.m : input.m, input.d, input.h || 0, input.mi || 0, 0);
+    solar = lu.getSolar();
+  } else {
+    solar = Solar.fromYmdHms(input.y, input.m, input.d, input.h || 0, input.mi || 0, 0);
+  }
+  const birthSolar = solar;
+  // 真太陽時
+  let adjMin = 0, eot = 0;
+  if (input.trueSolar && typeof input.lon === 'number' && !isNaN(input.lon)) {
+    const doy = Math.floor((Date.UTC(solar.getYear(), solar.getMonth() - 1, solar.getDay()) - Date.UTC(solar.getYear(), 0, 0)) / 864e5);
+    const B = 2 * Math.PI * (doy - 81) / 364;
+    eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+    adjMin = Math.round((input.lon - 120) * 4 + eot);
+    const t = new Date(Date.UTC(solar.getYear(), solar.getMonth() - 1, solar.getDay(), solar.getHour(), solar.getMinute()) + adjMin * 60000);
+    solar = Solar.fromYmdHms(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate(), t.getUTCHours(), t.getUTCMinutes(), 0);
+  }
+  const hour = solar.getHour();
+  // 時辰：子0 丑1 ... 亥11（23點起為子）
+  let h = hour === 23 ? 0 : Math.floor((hour + 1) / 2);
+  let daySolar = solar;
+  if (hour === 23 && input.lateZi !== 'same') daySolar = solar.next(1); // 晚子時算次日
+  const lunar = Solar.fromYmd(daySolar.getYear(), daySolar.getMonth(), daySolar.getDay()).getLunar();
+  const lYear = lunar.getYear();
+  const rawMonth = lunar.getMonth();
+  const isLeap = rawMonth < 0;
+  let m = Math.abs(rawMonth);
+  const d = lunar.getDay();
+  // 閏月處理
+  if (isLeap) {
+    const mode = input.leapMode || 'mid';
+    if (mode === 'next' || (mode === 'mid' && d > 15)) m = m + 1;
+    if (m > 12) m = 1; // 閏十二月後半 -> 正月（極少見）
+  }
+  const byLichun = input.yearMode === 'lichun';
+  const yg = GAN.indexOf(byLichun ? lunar.getYearGanByLiChun() : lunar.getYearGan());
+  const yz = ZHI.indexOf(byLichun ? lunar.getYearZhiByLiChun() : lunar.getYearZhi());
+  const yang = yg % 2 === 0;
+  const male = input.gender !== '女';
+  const forward = (yang && male) || (!yang && !male); // 陽男陰女順
+
+  // 命宮、身宮
+  const ming = m12(2 + (m - 1) - h);
+  const shen = m12(2 + (m - 1) + h);
+  // 宮干（五虎遁）
+  const tigerStart = [2, 4, 6, 8, 0][yg % 5];
+  const palaceGan = b => (tigerStart + m12(b - 2)) % 10;
+  // 五行局
+  const mg = palaceGan(ming);
+  const ju = JU[NAYIN[Math.floor(jiazi(mg, ming) / 2)]];
+
+  const stars = Array.from({ length: 12 }, () => ({ major: [], minor: [], adj: [] }));
+  const put = (list, b, name, extra) => stars[m12(b)][list].push(Object.assign({ name, bright: bright(name, m12(b)), hua: '' }, extra || {}));
+
+  // 紫微
+  let q = Math.ceil(d / ju); const diff = q * ju - d;
+  const zw = m12(2 + q - 1 + (diff % 2 ? -diff : diff));
+  const tf = m12(16 - zw);
+  [['紫微',0],['天機',-1],['太陽',-3],['武曲',-4],['天同',-5],['廉貞',-8]].forEach(([n, o]) => put('major', zw + o, n));
+  [['天府',0],['太陰',1],['貪狼',2],['巨門',3],['天相',4],['天梁',5],['七殺',6],['破軍',10]].forEach(([n, o]) => put('major', tf + o, n));
+
+  // 六吉
+  const zuofu = m12(4 + m - 1), youbi = m12(10 - (m - 1));
+  const wenchang = m12(10 - h), wenqu = m12(4 + h);
+  put('minor', zuofu, '左輔'); put('minor', youbi, '右弼');
+  put('minor', wenchang, '文昌'); put('minor', wenqu, '文曲');
+  const KUI = [[1,7],[0,8],[11,9],[11,9],[1,7],[0,8],[1,7],[6,2],[3,5],[3,5]][yg];
+  put('minor', KUI[0], '天魁'); put('minor', KUI[1], '天鉞');
+  // 祿存、羊陀
+  const lucun = [2,3,5,6,5,6,8,9,11,0][yg];
+  put('minor', lucun, '祿存'); put('minor', lucun + 1, '擎羊'); put('minor', lucun - 1, '陀羅');
+  // 火鈴
+  const g = sanhe(yz); // 0申子辰 1巳酉丑 2寅午戌 3亥卯未
+  const huoStart = [2, 3, 1, 9][g], lingStart = [10, 10, 3, 10][g];
+  put('minor', huoStart + h, '火星'); put('minor', lingStart + h, '鈴星');
+  // 空劫
+  put('minor', 11 - h, '地空'); put('minor', 11 + h, '地劫');
+  // 天馬
+  // 天馬：年馬（依生年支，文墨預設）或月馬（依生月，星僑等軟體）
+  put('minor', [2, 11, 8, 5][input.tianma === 'month' ? sanhe(m12(m + 1)) : g], '天馬');
+
+  // 四化
+  sihuaList(yg, input).forEach((n, i) => {
+    stars.forEach(p => ['major', 'minor'].forEach(k => p[k].forEach(s => { if (s.name === n) s.hua = HUA[i]; })));
+  });
+
+  // 雜曜
+  const A = (b, n) => put('adj', b, n);
+  const hongluan = m12(3 - yz);
+  A(hongluan, '紅鸞'); A(hongluan + 6, '天喜');
+  A(9 + m - 1, '天刑'); A(1 + m - 1, '天姚');
+  A(8 + 2 * Math.floor((m - 1) / 2), '解神');
+  A([5, 8, 2, 11][(m - 1) % 4], '天巫');
+  A([10,5,4,2,7,3,11,7,2,6,10,2][m - 1], '天月');
+  A(2 - 2 * (m - 1), '陰煞');
+  A(6 + h, '台輔'); A(2 + h, '封誥');
+  A(zuofu + d - 1, '三台'); A(youbi - (d - 1), '八座');
+  A(wenchang + d - 2, '恩光'); A(wenqu + d - 2, '天貴');
+  A(4 + yz, '龍池'); A(10 - yz, '鳳閣');
+  A(6 - yz, '天哭'); A(6 + yz, '天虛');
+  const gc = [[2,10],[2,10],[5,1],[5,1],[5,1],[8,4],[8,4],[8,4],[11,7],[11,7],[11,7],[2,10]][yz];
+  A(gc[0], '孤辰'); A(gc[1], '寡宿');
+  A([8,9,10,5,6,7,2,3,4,11,0,1][yz], '蜚廉');
+  A([5,9,1][yz % 3 === 0 ? 0 : (yz % 3 === 2 ? 1 : 2)], '破碎');
+  A([4, 1, 10, 7][g], '華蓋');
+  A([9, 6, 3, 0][g], '咸池');
+  A(5 + yz, '月德');
+  A(10 - yz, '年解');
+  A([7,6,9,8,11,10,1,0,3,2,5,4][yz], '大耗');
+  A(ming + yz, '天才'); A(shen + yz, '天壽');
+  A([7,4,5,2,3,9,11,9,10,6][yg], '天官');
+  A([9,8,0,11,3,2,6,5,6,5][yg], '天福');
+  A([5,6,0,5,6,8,2,6,9,11][yg], '天廚');
+  A(yz + 1, '天空');
+  // 截空：陽年在陽宮為正，另一宮為副
+  const jie = [[8,9],[6,7],[4,5],[2,3],[0,1]][yg % 5];
+  A(yang ? jie[0] : jie[1], '截空');
+  A(yang ? jie[1] : jie[0], '副截');
+  // 旬空
+  const jz = jiazi(yg, yz); const xunHead = jz - (jz % 10); const kong1 = m12(xunHead + 10), kong2 = m12(xunHead + 11);
+  A(yang ? kong1 : kong2, '旬空'); A(yang ? kong2 : kong1, '副旬');
+  // 天傷、天使
+  if (input.shangshi === 'yinyang' && !forward) { A(ming - 5, '天傷'); A(ming - 7, '天使'); }
+  else { A(ming - 7, '天傷'); A(ming - 5, '天使'); }
+
+  // 長生十二神
+  const csStart = { 2: 8, 3: 11, 4: 5, 5: 8, 6: 2 }[ju];
+  const cs = Array(12), bs = Array(12), sq = Array(12), jq = Array(12);
+  for (let i = 0; i < 12; i++) {
+    cs[m12(csStart + (forward ? i : -i))] = CHANGSHENG[i];
+    bs[m12(lucun + (forward ? i : -i))] = BOSHI[i];
+    sq[m12(yz + i)] = SUIQIAN[i];
+    jq[m12([0, 9, 6, 3][g] + i)] = JIANGQIAN[i];
+  }
+
+  // 大限、小限
+  const xiaoStart = [10, 7, 4, 1][g];
+  const palaces = [];
+  for (let b = 0; b < 12; b++) {
+    const idx = m12(ming - b);
+    const step = forward ? m12(b - ming) : m12(ming - b);
+    const daStart = ju + step * 10;
+    const xiao = [];
+    for (let age = 1; age <= 120; age++) {
+      const pos = male ? m12(xiaoStart + age - 1) : m12(xiaoStart - (age - 1));
+      if (pos === b) xiao.push(age);
+    }
+    palaces.push({
+      branch: b, zhi: ZHI[b], gan: GAN[palaceGan(b)], name: PALACES[idx], isShen: b === shen,
+      major: stars[b].major, minor: stars[b].minor, adj: stars[b].adj,
+      changsheng: cs[b], boshi: bs[b], suiqian: sq[b], jiangqian: jq[b],
+      daxian: [daStart, daStart + 9], xiaoxian: xiao
+    });
+  }
+
+  const MINGZHU = ['貪狼','巨門','祿存','文曲','廉貞','武曲','破軍','武曲','廉貞','文曲','祿存','巨門'];
+  const SHENZHU = ['火星','天相','天梁','天同','文昌','天機','火星','天相','天梁','天同','文昌','天機'];
+  const doujun = m12(0 - (m - 1) + h); // 子年斗君：由子宮起正月逆數至生月，再順數至生時
+  const baziLunar = Solar.fromYmdHms(solar.getYear(), solar.getMonth(), solar.getDay(), solar.getHour(), solar.getMinute(), 0).getLunar();
+  const ec = baziLunar.getEightChar();
+
+  return {
+    input, solar: birthSolar.toYmdHms(), trueSolarTime: input.trueSolar ? solar.toYmdHms() : null, adjMin,
+    lunarText: `${GAN[yg]}${ZHI[yz]}年 ${isLeap ? '閏' : ''}${'正二三四五六七八九十冬臘'[Math.abs(rawMonth)-1]}月${lunar.getDayInChinese().replace('廿','廿')} ${ZHI[h]}時`,
+    lunar: { year: lYear, month: Math.abs(rawMonth), isLeap, day: d, useMonth: m, hour: h },
+    yearGanZhi: GAN[yg] + ZHI[yz], yinyang: (yang ? '陽' : '陰') + (male ? '男' : '女'),
+    ju, juName: JU_NAME[ju], ming, shen, ziwei: zw,
+    mingzhu: MINGZHU[ming], shenzhu: SHENZHU[yz], doujun: ZHI[doujun], doujunIdx: doujun,
+    bazi: [ec.getYear(), ec.getMonth(), ec.getDay(), ec.getTime()],
+    forward, palaces, yearGan: yg
+  };
+}
+
+// 運限：大限四化、流年
+function daxianOf(chart, age) {
+  return chart.palaces.find(p => age >= p.daxian[0] && age <= p.daxian[1]) || null;
+}
+function sihuaOfGan(gi, opt) { return sihuaList(gi, opt).map((n, i) => ({ star: n, hua: HUA[i] })); }
+
+// 運限流曜（依天干）：流祿、流羊、流陀、流魁、流鉞、流昌、流曲
+function flowStars(gi) {
+  const lu = [2,3,5,6,5,6,8,9,11,0][gi];
+  const KUI = [[1,7],[0,8],[11,9],[11,9],[1,7],[0,8],[1,7],[6,2],[3,5],[3,5]][gi];
+  const CHANG = [5,6,8,9,8,9,11,0,2,3][gi];
+  const QU = [9,8,6,5,6,5,3,2,0,11][gi];
+  return [['祿',lu],['羊',m12(lu+1)],['陀',m12(lu-1)],['魁',KUI[0]],['鉞',KUI[1]],['昌',CHANG],['曲',QU]];
+}
+const api = { buildChart, flowStars, daxianOf, sihuaOfGan, GAN, ZHI, PALACES, SIHUA, HUA };
+if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.ZW = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(function(){
+  try{ document.documentElement.style.colorScheme='light'; }catch(e){}
+  const $=id=>document.getElementById(id);
+  const {ZHI,GAN,PALACES}=ZW;
+  const m12=n=>((n%12)+12)%12;
+  const POS={5:[0,0],6:[0,1],7:[0,2],8:[0,3],4:[1,0],9:[1,3],3:[2,0],10:[2,3],2:[3,0],1:[3,1],0:[3,2],11:[3,3]};
+  const SHA=['擎羊','陀羅','火星','鈴星','地空','地劫'];
+  const JI6=['左輔','右弼','文昌','文曲','天魁','天鉞'];
+  const KEY_MINOR=['天刑','紅鸞','天喜','咸池','天姚'];
+  const PEACH=['紅鸞','天喜','咸池','天姚'];
+  const tierCls=n=>JI6.includes(n)?'ji':SHA.includes(n)?'sha':'lu';
+  const HUACOLOR={祿:'lu',權:'quan',科:'ke',忌:'ji'};
+  const MONTHS=['正','二','三','四','五','六','七','八','九','十','冬','臘'];
+  const S={cal:'solar',gen:'男',chart:null,sel:null,mode:'ben',da:null,nian:null,yue:null,allMinor:false,flow:{}};
+
+  function setBig(on){ document.documentElement.classList.toggle('big',on); $('bigBtn').classList.toggle('on',on); try{localStorage.setItem('zw_big',on?'1':'');}catch(e){} if(S.chart) render(); }
+  $('bigBtn').onclick=()=>setBig(!document.documentElement.classList.contains('big'));
+  $('bigBtn').hidden=true;
+  // 預設顯示全部星曜；按「精簡」只留主星、甲級星與講義重點小星
+  function setLite(on){ S.allMinor=!on; $('minorBtn').classList.toggle('on',on); try{localStorage.setItem('zw_lite',on?'1':'');}catch(e){} render(); }
+  $('minorBtn').onclick=()=>setLite(S.allMinor);
+  S.allMinor=true;
+  try{ if(localStorage.getItem('zw_lite')){ S.allMinor=false; $('minorBtn').classList.add('on'); } }catch(e){}
+
+  $('editBtn').onclick=()=>{ const f=$('f'); f.hidden=!f.hidden; $('editBtn').textContent=f.hidden?'改生日':'收起'; if(!f.hidden)f.scrollIntoView({behavior:'smooth',block:'start'}); };
+  function seg(id,key,cb){ $(id).querySelectorAll('button').forEach(b=>b.onclick=()=>{ $(id).querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); S[key]=b.dataset.v; cb&&cb(); }); }
+  seg('calSeg','cal',()=>{ $('leapWrap').hidden=S.cal!=='lunar'; });
+  seg('genSeg','gen');
+  const OPT=['lateZi','leapMode','yearMode','yueMode','tianma','geng','wu','ren','shangshi'];
+  function readInput(){
+    const o={ y:+$('yy').value, m:+$('mm').value, d:+$('dd').value, h:+$('hh').value, mi:+$('mi').value,
+      gender:S.gen, calendar:S.cal, leap:$('leap').checked, trueSolar:$('ts').checked, lon:parseFloat($('lon').value), name:$('nm').value.trim() };
+    OPT.forEach(k=>o[k]=$(k).value); return o;
+  }
+  function loadInput(){
+    try{ const s=JSON.parse(localStorage.getItem('zw_last')||'null'); if(!s)return;
+      $('yy').value=s.y;$('mm').value=s.m;$('dd').value=s.d;$('hh').value=s.h;$('mi').value=s.mi;$('nm').value=s.name||'';
+      OPT.forEach(k=>{ if(s[k])$(k).value=s[k]; }); $('ts').checked=!!s.trueSolar; if(s.lon)$('lon').value=s.lon; $('leap').checked=!!s.leap;
+      if(s.calendar==='lunar')$('calSeg').querySelectorAll('button')[1].click();
+      if(s.gender==='女')$('genSeg').querySelectorAll('button')[1].click();
+    }catch(e){}
+  }
+
+  const thisYear=()=>new Date().getFullYear();
+  const yzOf=y=>m12(y-4), ygOf=y=>((y-4)%10+10)%10;
+  const ageOf=y=>y-S.chart.lunar.year+1;
+  const decades=()=>[...S.chart.palaces].sort((a,b)=>a.daxian[0]-b.daxian[0]).slice(0,10);
+
+  function run(fromForm){
+    const inp=readInput(); $('msg').hidden=true;
+    const bad=t=>{ $('msg').textContent=t; $('msg').hidden=false; $('f').hidden=false; $('editBtn').textContent='收起'; };
+    if(!inp.y||!inp.m||!inp.d||inp.h<0||inp.h>23||inp.mi<0||inp.mi>59) return bad('日期或時間沒填完整');
+    let c; try{ c=ZW.buildChart(inp,{Solar,Lunar}); }catch(e){ return bad('這個日期不存在，請檢查（農曆要看有沒有閏月、大小月）'); }
+    try{ localStorage.setItem('zw_last',JSON.stringify(inp)); }catch(e){}
+    const keep=!fromForm&&S.chart;
+    S.chart=c;
+    if(!keep){ const dp=ZW.daxianOf(c,thisYear()-c.lunar.year+1);
+      S.mode='ben'; S.da=dp?dp.branch:c.ming; S.nian=thisYear(); S.yue=null; S.sel=c.ming; }
+    if(fromForm){ $('f').hidden=true; $('editBtn').textContent='改生日'; }
+    render();
+    if(fromForm) $('status').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function yueStart(){ const c=S.chart, nz=yzOf(S.nian);
+    return c.input.yueMode==='doujun' ? m12(nz-(c.lunar.useMonth-1)+c.lunar.hour) : nz; }
+  const yueBranch=k=>m12(yueStart()+k-1);
+  const yueGan=k=>([2,4,6,8,0][ygOf(S.nian)%5]+k-1)%10;
+  function huaMap(gi){ const o={}; ZW.sihuaOfGan(gi,S.chart.input).forEach(x=>o[x.star]=x.hua); return o; }
+  const esc=s=>(s||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+  const short=n=>n.replace('宮','').slice(0,2);
+
+  function layers(){
+    const c=S.chart, L={};
+    const lv=S.mode==='ben'?0:S.mode==='da'?1:S.mode==='nian'?2:3;
+    L.daP=lv>=1?c.palaces[S.da]:null;
+    L.daHua=L.daP?huaMap(GAN.indexOf(L.daP.gan)):{};
+    L.nHua=lv>=2?huaMap(ygOf(S.nian)):{};
+    L.mHua=lv>=3?huaMap(yueGan(S.yue)):{};
+    L.lv=lv; return L;
+  }
+
+  function render(){
+    const c=S.chart; if(!c)return;
+    const L=layers(), {daP,daHua,nHua,mHua,lv}=L;
+    const nyZ=yzOf(S.nian), myZ=lv>=3?yueBranch(S.yue):null;
+    const sel=S.sel, role={}; role[m12(sel+6)]='對'; role[m12(sel+4)]='合'; role[m12(sel-4)]='合';
+    const jL=m12(sel-1), jR=m12(sel+1);
+    const inp=c.input;
+    $('whoName').textContent=(inp.name||'命盤')+'　'+c.yinyang;
+    $('whoLine').textContent=`${c.solar.slice(0,16).replace(/-/g,'/')}　${c.lunarText}`;
+
+    let st='<span class="tag ben">本命盤</span><span class="hint">點下方大限、流年看運限</span>';
+    if(lv>=1) st=`<span class="tag da">大限 ${daP.daxian[0]}–${daP.daxian[1]}（${daP.gan}${daP.zhi}）</span>`;
+    if(lv>=2) st+=`<span class="tag nian">${S.nian} ${GAN[ygOf(S.nian)]}${ZHI[nyZ]}年・${ageOf(S.nian)}歲</span>`;
+    if(lv>=3) st+=`<span class="tag yue">${MONTHS[S.yue-1]}月（${GAN[yueGan(S.yue)]}${ZHI[m12(S.yue+1)]}）</span>`;
+    if(lv>=1) st+='<button class="pill back" id="backBtn" type="button">回本命</button>';
+    $('status').innerHTML=st;
+    if(lv>=1) $('backBtn').onclick=()=>{ S.mode='ben'; S.sel=c.ming; render(); };
+
+    const flow={};
+    const addFlow=(gi,pre,cls)=>ZW.flowStars(gi).forEach(([n,b])=>{ (flow[b]=flow[b]||[]).push({t:pre+n,cls,name:n}); });
+    if(lv>=1) addFlow(GAN.indexOf(daP.gan),'大','d');
+    if(lv>=2) addFlow(ygOf(S.nian),'年','n');
+    S.flow=flow;
+    const xiaoB=lv>=2?c.palaces.find(p=>p.xiaoxian.includes(ageOf(S.nian))):null;
+
+    const el=$('chart'); el.innerHTML='';
+    for(let b=0;b<12;b++){
+      const p=c.palaces[b];
+      const d=document.createElement('div');
+      const isJia=b===jL||b===jR;
+      d.className='cell'+(b===sel?' sel':'')+(role[b]?' sf':'')+(isJia?' jia':'');
+      d.dataset.b=b;
+      d.style.gridRow=POS[b][0]+1; d.style.gridColumn=POS[b][1]+1;
+      const col=(s,cls)=>{
+        let h=`<div class="col ${cls}"><span class="nm">${s.name}</span><span class="br">${s.bright||''}</span>`;
+        if(s.hua)h+=`<span class="hua ${s.hua}">${s.hua}</span>`;
+        if(daHua[s.name])h+=`<span class="hua d">${daHua[s.name]}</span>`;
+        if(nHua[s.name])h+=`<span class="hua n">${nHua[s.name]}</span>`;
+        if(mHua[s.name])h+=`<span class="hua m">${mHua[s.name]}</span>`;
+        return h+'</div>';
+      };
+      const stars=p.major.map(s=>col(s,'mj')).join('')+p.minor.map(s=>col(s,tierCls(s.name))).join('');
+      const adj=S.allMinor?p.adj.map(s=>s.name):p.adj.map(s=>s.name).filter(n=>KEY_MINOR.includes(n));
+      let lim='';
+      if(lv>=3) lim+=`<span class="lim m${b===myZ?' hi':''}">月${short(PALACES[m12(myZ-b)])}</span>`;
+      if(lv>=2) lim+=`<span class="lim n${b===nyZ?' hi':''}">年${short(PALACES[m12(nyZ-b)])}</span>`;
+      if(lv>=1) lim+=`<span class="lim d${b===S.da?' hi':''}">大${short(PALACES[m12(S.da-b)])}</span>`;
+      const nianAges=[]; for(let a=1;a<=100;a++){ if(yzOf(c.lunar.year+a-1)===b) nianAges.push(a); }
+      const roleTag=b===sel?'本':role[b]?role[b]:isJia?'夾':'';
+      d.innerHTML=`<div class="stars">${stars}</div>
+        ${flow[b]?`<div class="flow">${flow[b].map(f=>`<span class="${f.cls}">${f.t}</span>`).join('')}</div>`:''}
+        ${adj.length?`<div class="adj">${adj.map(n=>`<span${PEACH.includes(n)?' class="th"':''}>${n}</span>`).join('')}</div>`:''}
+        ${S.allMinor?`<div class="adj">${[p.changsheng,p.boshi,p.jiangqian,p.suiqian].map(n=>`<span>${n}</span>`).join('')}</div>`:''}
+        <div class="grow"></div>
+        ${lv===0?`<div class="ages"><span>流年 ${nianAges.slice(0,5).join(',')}</span><br><span>小限 ${p.xiaoxian.slice(0,5).join(',')}</span></div>`:''}
+        <div class="foot"><div class="gz">${p.gan}<br>${p.zhi}</div>
+          <div class="names">${roleTag||lim?`<div class="limrow">${roleTag?`<span class="role">${roleTag}</span>`:''}${lim}</div>`:''}<div class="pname${p.name==='命宮'?' ming':''}">${p.name}</div>
+            ${p.isShen||xiaoB===p?`<div class="limrow">${p.isShen?'<span class="shen">身宮</span>':''}${xiaoB===p?'<span class="xiao">小限</span>':''}</div>`:''}</div>
+          <div class="r">${p.daxian[0]}<br>${p.daxian[1]}</div></div>`;
+      d.onclick=()=>{ if(S.sel===b)return; S.sel=b; render(); };
+      el.appendChild(d);
+    }
+    const ctr=document.createElement('div'); ctr.className='center';
+    ctr.innerHTML=`<div class="cn">${esc(inp.name)||'命盤'}　${c.yinyang}　${c.juName}</div>
+      <div>國曆 ${c.solar.slice(0,16).replace(/-/g,'/')}</div>
+      ${c.trueSolarTime?`<div>真太陽時 ${c.trueSolarTime.slice(11,16)}（${c.adjMin>=0?'+':''}${c.adjMin}分）</div>`:''}
+      <div>農曆 ${c.lunarText}</div>
+      <div><span class="nw">命主 <b>${c.mingzhu}</b></span>　<span class="nw">身主 <b>${c.shenzhu}</b></span>　<span class="nw">子斗 <b>${c.doujun}</b></span></div>
+      <div>今年虛歲 ${ageOf(thisYear())}</div>
+      <div class="bazi">${c.bazi.map(g=>`<span>${g}</span>`).join('')}</div>`;
+    el.appendChild(ctr);
+
+    renderTimeline();
+    renderLegend(lv);
+    renderDetail(L);
+    fitChart();
+  }
+
+  // 盤的高度＝畫面高度扣掉上方與下方大限流年表格，讓一進來就看得到可以點的表格
+  function fitChart(){
+    const chart=$('chart'), cells=[...chart.querySelectorAll('.cell')];
+    if(document.documentElement.classList.contains('big')){ cells.forEach(c=>c.style.removeProperty('--z')); requestAnimationFrame(drawLines); return; }
+    const top=$('chartwrap').getBoundingClientRect().top+window.scrollY;
+    const rows=[...$('tl').querySelectorAll('.tlrow')].slice(0,2); const tlH=rows.reduce((a,r)=>a+r.offsetHeight,0)+2||90;
+    const avail=window.innerHeight-top-tlH-14;
+    const cellH=Math.max(112,Math.min(210,Math.floor((avail-5)/4)));
+    chart.style.setProperty('--cellH',cellH+'px');
+    cells.forEach(c=>{
+      let z=1; c.style.setProperty('--z',z);
+      const over=()=>c.scrollHeight>c.clientHeight+1||[...c.querySelectorAll('.adj,.ages,.flow,.stars')].some(e=>e.scrollWidth>e.clientWidth+1);
+      while(over()&&z>0.62){ z=Math.round((z-0.04)*100)/100; c.style.setProperty('--z',z); }
+    });
+    const need=Math.max(...cells.map(c=>c.scrollHeight));
+    if(need>cellH+1) chart.style.setProperty('--cellH',need+'px');
+    requestAnimationFrame(drawLines);
+  }
+
+  function renderTimeline(){
+    const c=S.chart, tl=$('tl'), cy=thisYear(), curAge=ageOf(cy);
+    let h='<div class="tlrow da"><div class="tlh">大限</div>';
+    decades().forEach(p=>{ const cur=curAge>=p.daxian[0]&&curAge<=p.daxian[1];
+      h+=`<button type="button" data-da="${p.branch}" class="${S.mode!=='ben'&&S.da===p.branch?'on':''}${cur?' cur':''}">${p.daxian[0]}–${p.daxian[1]}<small>${p.gan}${p.zhi}</small></button>`; });
+    h+='</div>';
+    const dp=c.palaces[S.da], y0=c.lunar.year+dp.daxian[0]-1;
+    h+='<div class="tlrow nian"><div class="tlh">流年</div>';
+    for(let y=y0;y<y0+10;y++) h+=`<button type="button" data-ny="${y}" class="${(S.mode==='nian'||S.mode==='yue')&&S.nian===y?'on':''}${y===cy?' cur':''}">${y}<small>${GAN[ygOf(y)]}${ZHI[yzOf(y)]}${ageOf(y)}</small></button>`;
+    h+='</div>';
+    if(S.mode==='nian'||S.mode==='yue'){
+      for(let r=0;r<2;r++){
+        h+=`<div class="tlrow m"><div class="tlh">${r===0?'流月':''}</div>`;
+        for(let k=r*6+1;k<=r*6+6;k++) h+=`<button type="button" data-yue="${k}" class="${S.mode==='yue'&&S.yue===k?'on':''}">${MONTHS[k-1]}月<small>${GAN[yueGan(k)]}${ZHI[m12(k+1)]}</small></button>`;
+        h+='</div>';
+      }
+    }
+    tl.innerHTML=h;
+    tl.querySelectorAll('[data-da]').forEach(b=>b.onclick=()=>{ const v=+b.dataset.da;
+      if(S.mode==='da'&&S.da===v){ S.mode='ben'; S.sel=c.ming; }
+      else { S.mode='da'; S.da=v; S.sel=v; const p=c.palaces[v], a=ageOf(S.nian); if(!(a>=p.daxian[0]&&a<=p.daxian[1])) S.nian=c.lunar.year+p.daxian[0]-1; }
+      render(); });
+    tl.querySelectorAll('[data-ny]').forEach(b=>b.onclick=()=>{ const y=+b.dataset.ny;
+      if(S.mode==='nian'&&S.nian===y){ S.mode='da'; S.sel=S.da; }
+      else { S.mode='nian'; S.nian=y; const dp2=ZW.daxianOf(c,ageOf(y)); if(dp2)S.da=dp2.branch; S.sel=yzOf(y); }
+      render(); });
+    tl.querySelectorAll('[data-yue]').forEach(b=>b.onclick=()=>{ const k=+b.dataset.yue;
+      if(S.mode==='yue'&&S.yue===k){ S.mode='nian'; S.sel=yzOf(S.nian); }
+      else { S.mode='yue'; S.yue=k; S.sel=yueBranch(k); }
+      render(); });
+  }
+
+  function renderLegend(lv){
+    let h='<span><b style="color:var(--ming);font-family:var(--serif)">紅</b>主星</span><span><b style="color:var(--jiInk)">綠</b>六吉</span><span><b style="color:var(--shaInk)">黑</b>六煞</span><span><b style="color:var(--luInk)">金</b>祿存天馬</span><span><b style="color:#c2185b">粉</b>桃花</span>';
+    h+='<span><span class="hua 祿">祿</span><span class="hua 權">權</span><span class="hua 科">科</span><span class="hua 忌">忌</span>生年</span>';
+    if(lv>=1)h+='<span><span class="hua d">祿</span>大限</span>';
+    if(lv>=2)h+='<span><span class="hua n">祿</span>流年</span>';
+    if(lv>=3)h+='<span><span class="hua m">祿</span>流月</span>';
+    $('legend').innerHTML=h;
+  }
+
+  function starSet(b,L){
+    const p=S.chart.palaces[b], out=[];
+    [...p.major,...p.minor].forEach(s=>{ out.push({n:s.name,src:''});
+      if(s.hua)out.push({n:'化'+s.hua,src:'生年'}); if(L.daHua[s.name])out.push({n:'化'+L.daHua[s.name],src:'大限'});
+      if(L.nHua[s.name])out.push({n:'化'+L.nHua[s.name],src:'流年'}); if(L.mHua[s.name])out.push({n:'化'+L.mHua[s.name],src:'流月'}); });
+    const MAP={祿:'祿存',羊:'擎羊',陀:'陀羅',魁:'天魁',鉞:'天鉞',昌:'文昌',曲:'文曲'};
+    (S.flow[b]||[]).forEach(f=>out.push({n:MAP[f.name],src:f.cls==='d'?'大限':'流年'}));
+    return out;
+  }
+  function findJia(b,L){
+    const Ls=starSet(m12(b-1),L), R=starSet(m12(b+1),L), me=starSet(b,L);
+    const has=(set,names)=>set.filter(x=>names.includes(x.n));
+    const src=a=>{ const s=[...new Set(a.map(x=>x.src).filter(Boolean))]; return s.length?`（${s.join('、')}）`:''; };
+    const pair=(A,B)=>{ const la=has(Ls,A),rb=has(R,B),lb=has(Ls,B),ra=has(R,A); if(la.length&&rb.length)return [...la,...rb]; if(lb.length&&ra.length)return [...lb,...ra]; return null; };
+    const res=[], add=(name,hit,bad)=>{ if(hit)res.push({name:name+src(hit),bad}); };
+    const yt=pair(['擎羊'],['陀羅']); if(yt) add(me.some(x=>x.n==='化忌')?'羊陀夾忌':'羊陀夾',yt,true);
+    add('火鈴夾',pair(['火星'],['鈴星']),true);
+    add('空劫夾',pair(['地空'],['地劫']),true);
+    add('雙忌夾',pair(['化忌'],['化忌']),true);
+    add('雙祿夾',pair(['化祿','祿存'],['化祿','祿存']),false);
+    const qlj=pair(['化權'],['化祿']);
+    if(qlj&&me.some(x=>x.n==='天馬')) add('祿權夾馬',qlj,false); else add('權祿夾',qlj,false);
+    add('科權夾',pair(['化科'],['化權']),false);
+    add('科祿夾',pair(['化科'],['化祿']),false);
+    add('日月夾',pair(['太陽'],['太陰']),false);
+    add('紫府夾',pair(['紫微'],['天府']),false);
+    add('左右夾',pair(['左輔'],['右弼']),false);
+    add('昌曲夾',pair(['文昌'],['文曲']),false);
+    add('魁鉞夾',pair(['天魁'],['天鉞']),false);
+    return res;
+  }
+
+  function limNames(b,L){
+    let s='';
+    if(L.lv>=1) s+=`<span class="lim d">大${short(PALACES[m12(S.da-b)])}</span>`;
+    if(L.lv>=2) s+=`<span class="lim n">年${short(PALACES[m12(yzOf(S.nian)-b)])}</span>`;
+    if(L.lv>=3) s+=`<span class="lim m">月${short(PALACES[m12(yueBranch(S.yue)-b)])}</span>`;
+    return s;
+  }
+  function renderDetail(L){
+    const c=S.chart, b=S.sel, p=c.palaces[b];
+    const huaTxt=x=>{ let t=''; if(x.hua)t+=`<b style="color:var(--${HUACOLOR[x.hua]})">化${x.hua}</b>`;
+      if(L.daHua[x.name])t+=`<b style="color:var(--da)">大${L.daHua[x.name]}</b>`; if(L.nHua[x.name])t+=`<b style="color:var(--nian)">年${L.nHua[x.name]}</b>`; if(L.mHua[x.name])t+=`<b style="color:var(--yue)">月${L.mHua[x.name]}</b>`; return t; };
+    const sx=x=>`${x.name}${x.bright?`<span class="k">${x.bright}</span>`:''}${huaTxt(x)}`;
+    const card=(i,label,main)=>{
+      const q=c.palaces[m12(i)], f=(S.flow[m12(i)]||[]).map(x=>x.t);
+      const ji=q.minor.filter(s=>JI6.includes(s.name)), sha=q.minor.filter(s=>SHA.includes(s.name)), lu=q.minor.filter(s=>!JI6.includes(s.name)&&!SHA.includes(s.name));
+      const key=q.adj.filter(s=>KEY_MINOR.includes(s.name)).map(s=>s.name);
+      return `<div class="pc${main?' main full':''}" data-b="${q.branch}">
+        <h3><span class="lab${main?'':' g'}">${label}</span><span class="pn">${q.name}</span><span class="gz">${q.gan}${q.zhi}</span>${q.isShen?'<span class="shen">身宮</span>':''}${limNames(q.branch,L)}</h3>
+        <div><span class="mj">${q.major.length?q.major.map(sx).join('　'):'無主星'}</span>${q.major.length?'':`<span class="k">　借對宮 ${c.palaces[m12(q.branch+6)].major.map(x=>x.name).join('、')}</span>`}</div>
+        ${ji.length?`<div><span class="k">吉　</span><span style="color:var(--jiInk);font-weight:700">${ji.map(sx).join('、')}</span></div>`:''}
+        ${sha.length?`<div><span class="k">煞　</span><b>${sha.map(sx).join('、')}</b></div>`:''}
+        ${lu.length?`<div><span class="k">祿馬</span>　<span style="color:var(--luInk);font-weight:700">${lu.map(sx).join('、')}</span></div>`:''}
+        ${f.length?`<div><span class="k">流曜</span>　${f.join('、')}</div>`:''}
+        ${key.length?`<div><span class="k">小星</span>　${key.join('、')}</div>`:''}
+      </div>`;
+    };
+    const jia=findJia(b,L);
+    $('detail').innerHTML=`<div class="t">${p.name}　${p.gan}${p.zhi}${limNames(b,L)}</div>
+      <div class="steps">看盤順序：① 本宮對宮一條線定調 → ② 左右夾宮看包圍 → ③ 三方看成就</div>
+      <div style="margin:6px 0">${jia.length?jia.map(j=>`<span class="jiatag ${j.bad?'x':'o'}">${j.name}</span>`).join(''):'<span class="k">此宮沒有成夾</span>'}</div>
+      <div class="pcgrid">
+        ${card(b,'本宮',true)}
+        <div class="full sec">① 對宮</div>${card(b+6,'對宮')}
+        <div class="full sec">② 夾宮</div>${card(b-1,'夾')}${card(b+1,'夾')}
+        <div class="full sec">③ 三合</div>${card(b+4,'三合')}${card(b-4,'三合')}
+      </div>
+      <div style="margin-top:8px"><span class="k">本宮小星　</span>${p.adj.map(x=>x.name).join('、')||'—'}</div>
+      <div><span class="k">十二神　</span>${p.changsheng}・${p.boshi}・${p.jiangqian}・${p.suiqian}</div>
+      <div><span class="k">大限　</span>${p.daxian[0]}–${p.daxian[1]} 歲　<span class="k">小限</span> ${p.xiaoxian.slice(0,6).join('、')}…歲</div>`;
+    $('detail').querySelectorAll('.pc h3').forEach(h=>h.onclick=()=>{ const nb=+h.parentNode.dataset.b; if(nb===S.sel)return; S.sel=nb; render(); $('status').scrollIntoView({behavior:'smooth',block:'start'}); });
+  }
+
+  function anchor(b){
+    const cell=$('chart').querySelector(`.cell[data-b="${b}"]`), wrap=$('chartwrap').getBoundingClientRect();
+    const r=cell.getBoundingClientRect(); const [row,col]=POS[b];
+    let x=r.left+r.width/2, y=r.top+r.height/2;
+    if(col===0)x=r.right; if(col===3)x=r.left; if(row===0)y=r.bottom; if(row===3)y=r.top;
+    return [x-wrap.left,y-wrap.top];
+  }
+  function drawLines(){
+    const svg=$('lines'); if(!S.chart||S.sel==null){ svg.innerHTML=''; return; }
+    const b=S.sel, A=anchor(b), O=anchor(m12(b+6)), P=anchor(m12(b+4)), Q=anchor(m12(b-4));
+    const Ln=(a,c,cls)=>`<line x1="${a[0]}" y1="${a[1]}" x2="${c[0]}" y2="${c[1]}"${cls?` class="${cls}"`:''}/>`;
+    const dot=a=>`<circle cx="${a[0]}" cy="${a[1]}" r="3.5"/>`;
+    svg.innerHTML=`<g>${Ln(A,P)}${Ln(A,Q)}${Ln(P,Q)}${Ln(A,O,'opp')}${dot(A)}${dot(O)}${dot(P)}${dot(Q)}</g>`;
+  }
+  let rz; window.addEventListener('resize',()=>{ clearTimeout(rz); rz=setTimeout(()=>{ if(S.chart) fitChart(); },120); });
+  if(window.ResizeObserver) new ResizeObserver(()=>requestAnimationFrame(drawLines)).observe($('chart'));
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ if(S.chart) fitChart(); });
+
+  // ===== 客戶命盤存檔（存在這個瀏覽器）=====
+  const CK='zw_clients';
+  let storeOK=true;
+  function loadClients(){ try{ return JSON.parse(localStorage.getItem(CK)||'[]')||[]; }catch(e){ storeOK=false; return []; } }
+  function saveClients(a){ try{ localStorage.setItem(CK,JSON.stringify(a)); return true; }catch(e){ storeOK=false; return false; } }
+  try{ localStorage.setItem('zw_t','1'); localStorage.removeItem('zw_t'); }catch(e){ storeOK=false; }
+  let curId=null;
+  const fmtBirth=i=>`${i.calendar==='lunar'?'農曆':'國曆'}${i.y}/${i.m}/${i.d}${i.leap&&i.calendar==='lunar'?'閏':''} ${String(i.h).padStart(2,'0')}:${String(i.mi).padStart(2,'0')} ${i.gender}`;
+  function showCli(on){ $('cli').hidden=!on; $('cliBtn').classList.toggle('on',on); if(on){ $('cliWarn').hidden=storeOK; $('cliName').value=$('nm').value; renderClients(); $('cli').scrollIntoView({behavior:'smooth',block:'start'}); } }
+  $('cliBtn').onclick=()=>showCli($('cli').hidden);
+  $('cliClose').onclick=()=>showCli(false);
+  function applyInput(s){
+    $('yy').value=s.y;$('mm').value=s.m;$('dd').value=s.d;$('hh').value=s.h;$('mi').value=s.mi;$('nm').value=s.name||'';
+    $('leap').checked=!!s.leap;
+    $('calSeg').querySelectorAll('button')[s.calendar==='lunar'?1:0].click();
+    $('genSeg').querySelectorAll('button')[s.gender==='女'?1:0].click();
+  }
+  function renderClients(){
+    const q=$('cliSearch').value.trim(), list=loadClients().filter(c=>!q||(c.name+c.note).includes(q));
+    const el=$('cliList');
+    if(!list.length){ el.innerHTML=`<div class="hint">${q?'找不到符合的客戶':'還沒有存任何客戶。先在上面「改生日」排好盤，再按「把目前這張盤存起來」。'}</div>`; return; }
+    el.innerHTML=list.map(c=>`<div class="ci${c.id===curId?' cur':''}" data-id="${c.id}"><div class="info"><b>${esc(c.name)}</b><div>${fmtBirth(c.input)}${c.note?'・'+esc(c.note):''}</div></div>
+      <button type="button" class="del">刪除</button></div>`).join('');
+    el.querySelectorAll('.ci').forEach(row=>{
+      const id=row.dataset.id;
+      row.querySelector('.info').onclick=()=>{ const c=loadClients().find(x=>x.id===id); if(!c)return; curId=id; applyInput(c.input); $('cliName').value=c.name; $('cliNote').value=c.note||''; showCli(false); run(true); };
+      const del=row.querySelector('.del');
+      del.onclick=()=>{ if(!del.classList.contains('arm')){ del.classList.add('arm'); del.textContent='確定刪除'; setTimeout(()=>{ del.classList.remove('arm'); del.textContent='刪除'; },3000); return; }
+        saveClients(loadClients().filter(x=>x.id!==id)); if(curId===id)curId=null; renderClients(); };
+    });
+  }
+  $('cliSearch').addEventListener('input',renderClients);
+  $('cliSave').onclick=()=>{
+    if(!S.chart){ return; }
+    const name=$('cliName').value.trim()||$('nm').value.trim();
+    const msg=$('cliMsg');
+    if(!name){ msg.hidden=false; msg.style.color='var(--ji)'; msg.textContent='請先填客戶名稱'; return; }
+    const input=Object.assign(readInput(),{name}); $('nm').value=name;
+    const all=loadClients(); const note=$('cliNote').value.trim();
+    const same=all.find(x=>x.id===curId&&x.name===name);
+    if(same){ same.input=input; same.note=note; same.savedAt=Date.now(); }
+    else { curId='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); all.unshift({id:curId,name,note,input,savedAt:Date.now()}); }
+    const ok=saveClients(all);
+    msg.hidden=false; msg.style.color=ok?'var(--lu)':'var(--ji)'; msg.textContent=ok?(same?`已更新「${name}」`:`已存入「${name}」`):'存不進去，這個瀏覽器不能存資料';
+    renderClients(); render();
+  };
+  // 備份
+  $('bakCopy').onclick=()=>{
+    const code=JSON.stringify({app:'紫微排盤',v:1,clients:loadClients()});
+    const out=$('bakOut'); out.value=code; out.hidden=false;
+    const done=t=>$('bakCopyMsg').textContent=t;
+    try{ navigator.clipboard.writeText(code).then(()=>done('已複製，共 '+loadClients().length+' 位客戶'),()=>{ out.select(); done('請長按下面文字全選複製'); }); }catch(e){ out.select(); done('請長按下面文字全選複製'); }
+  };
+  function restore(text){
+    const m=$('bakMsg');
+    try{ const d=JSON.parse(text.trim()); const inc=Array.isArray(d)?d:d.clients; if(!Array.isArray(inc))throw 0;
+      const all=loadClients(), ids=new Set(all.map(x=>x.id)); let n=0;
+      inc.forEach(c=>{ if(c&&c.input&&c.name&&!ids.has(c.id)){ all.push({id:c.id||('c'+Math.random().toString(36).slice(2)),name:String(c.name),note:String(c.note||''),input:c.input,savedAt:c.savedAt||Date.now()}); n++; } });
+      saveClients(all); m.style.color='var(--lu)'; m.textContent=`還原完成，新增 ${n} 位（重複的略過）`; $('bakIn').value=''; renderClients();
+    }catch(e){ m.style.color='var(--ji)'; m.textContent='備份碼看不懂，請確認有整段貼上'; }
+  }
+  $('bakRestore').onclick=()=>restore($('bakIn').value);
+  $('bakFile').onchange=e=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>restore(String(r.result)); r.readAsText(f); e.target.value=''; };
+
+  $('f').addEventListener('submit',e=>{ e.preventDefault(); run(true); });
+  document.querySelectorAll('details select, details input').forEach(x=>x.addEventListener('change',()=>{ if(S.chart) run(false); }));
+  loadInput();
+  if(typeof Solar==='undefined'){ $('f').hidden=false; $('msg').textContent='曆法元件載入失敗，請重新整理'; $('msg').hidden=false; }
+  else { let has=false; try{ has=!!localStorage.getItem('zw_last'); }catch(e){} if(has) run(false); else { $('f').hidden=false; $('editBtn').textContent='收起'; } }
+})();
+</script>
+
+</body></html>

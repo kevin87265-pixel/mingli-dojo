@@ -54,7 +54,7 @@
   <button class="hm-go" id="homeGo" type="button" data-go="learn" data-course="bazi1">開始上課：八字初階 第 1 課</button></div>
   <h3 class="hm-h">我的課程</h3>
   <div id="homeCourses"></div>
-  <button class="ghost hm-all" type="button" data-go="learn">看全部課程</button>
+  <div class="hm-pick" id="homePick"></div>
   <h3 class="hm-h" hidden>一條龍</h3>
   <div class="flow" id="flow" hidden>
     <button data-go="learn">① 學習</button><span>→</span>
@@ -89,13 +89,13 @@
   <p class="muted" id="drillP">不靠排盤軟體，自己一格一格算出來。全部答對才計時上榜，答錯每格罰 15 秒並告訴你怎麼算。登入後成績才會上排行榜。</p>
   <div id="drillRoot"></div></div>
   <div class="pg-dojo">
-  <h2 id="dojo" class="ln-arth" style="margin-top:24px">旺衰道場</h2>
+  <h2 id="dojo" class="ln-arth" style="margin-top:24px" hidden>旺衰道場</h2>
 
-<section class="panel"><div class="sec-head" style="margin:0"><div><h2>你的成績</h2><p>地支藏干、旺衰喜用、格局成敗、大運喜忌。成績會同步到你的帳號。</p></div>
+<section class="panel dj-score"><div class="sec-head" style="margin:0"><div><h2>你的成績</h2></div>
   <div class="stats"><div><b id="stTotal">0</b><span>總分</span></div><div><b id="stAcc">–</b><span>強弱命中率</span></div><div><b id="stStreak">0</b><span>連續命中</span></div></div></div></section>
 
 <section class="panel">
-  <div class="eyebrow" style="margin-bottom:6px">練習範圍</div>
+  <div class="dj-lab">練習範圍</div>
   <div class="controls">
     <div class="seg" id="scopeSeg">
       <button data-s="hidden">地支藏干</button>
@@ -112,9 +112,9 @@
         <button data-m="custom">自訂命盤</button>
       </div>
       <div class="seg" id="diffSeg">
-        <button data-d="easy">入門・盤勢分明</button>
-        <button class="on" data-d="mid">進階・不挑盤</button>
-        <button data-d="hard">挑戰・中和與從格</button>
+        <button data-d="easy">入門<small>盤勢分明</small></button>
+        <button class="on" data-d="mid">進階<small>不挑盤</small></button>
+        <button data-d="hard">挑戰<small>中和與從格</small></button>
       </div>
     </div>
     <div id="customBox" hidden>
@@ -260,24 +260,6 @@
   </div>
 </section>
 
-<details class="model panel">
-  <summary>這套引擎的模型參數（可核對、可質疑）</summary>
-  <p style="font-size:.95em;color:var(--ink2);margin:8px 0 0">教學用的加權近似，不是任何一家的正宗。刻意把三要素分開計分，讓你看到「月令一項就佔一半」是怎麼算出來的。跟你的老師或軟體不同時，以能解釋實際人生的那一套為準。</p>
-  <table>
-    <tr><th>得令</th><td>月支本氣對日主：比劫 +32、印 +22、食傷 −12、財 −18、官殺 −24。月支被沖 ×0.6。</td></tr>
-    <tr><th>得地</th><td>四支藏干逐字計：本氣 10、中氣 5、餘氣 3；乘位置權重 年 0.6、月 1.0、日 1.2、時 0.8；比劫 +1.0、印 +0.9、食傷 −0.6、財 −0.8、官殺 −1.0。</td></tr>
-    <tr><th>得勢</th><td>年月時三干：比劫 +10、印 +9、食傷 −6、財 −8、官殺 −10；有根 ×1.4、虛浮 ×0.6。</td></tr>
-    <tr><th>合局</th><td>三合、三會成局：助身 +18、剋洩 −18。半合、六合、天干合只在筆記提示，不計分。</td></tr>
-    <tr><th>分級</th><td>≤ −45 極弱｜−45～−12 偏弱｜−12～12 中和｜12～45 偏強｜≥ 45 極強。</td></tr>
-    <tr><th>從格</th><td>極弱且全局有根的比劫印星力量 &lt; 8 → 從弱候選；極強且有根的財官食傷 &lt; 8 → 從強候選。</td></tr>
-    <tr><th>用喜忌</th><td>身弱：財旺用比劫、官殺或食傷旺用印；用印而財透干者，財為第一忌（財壞印）。身強：印重用財、比劫重用官殺，食傷為次選。從弱：用最旺的剋洩之神；從強：用印比。中和：先取調候，再取財官。喜神＝次選之神。亥子丑月火為調候、巳午未月水為調候，用神選調候給半分。</td></tr>
-    <tr><th>格局</th><td>先看祿刃：月令為日主之祿＝建祿格；陽干月令為刃＝陽刃格，成立就不再看透干。其餘看月支藏干透出（年月時干）：本氣透取本氣，否則中氣、餘氣何者透取之，皆不透取本氣。陰干沒有陽刃格，也沒有比肩格、劫財格。</td></tr>
-    <tr><th>成敗</th><td>破格之神只看天干透出；救應之神可透干、也可藏於任一地支的本氣或中氣。正官：忌傷官、七殺混雜，印救。七殺：食神制或印化為成，無則破。財格：忌比劫，官殺或食傷救。正印：忌財，比劫救。偏印：忌食神，財救。食神：忌偏印，財救。傷官：忌正官，印或財救。建祿、陽刃：逆用，見官殺或食傷為成，全無則破。</td></tr>
-    <tr><th>大運</th><td>陽男陰女順排、陰男陽女逆排，從月柱起八步（起運歲數需生日，此處不算）。運干 0.4、運支 0.6 權重：用神 +1、喜神 +0.8、第一忌 −1、其他忌類 −0.5；運支沖月支 −0.3、沖日支 −0.2、運干合日主 −0.2。＞0.25 喜、＜−0.25 忌，其餘平。</td></tr>
-  </table>
-</details>
-
-<p class="foot">命盤隨機生成，年月與日時的干支遵守五虎遁、五鼠遁，都是真實可能出現的盤。</p>
 
 </div>
 </section>
@@ -483,8 +465,11 @@
 <section class="tab" id="tab-me" hidden>
   <div class="sec-head"><div><h2>我的</h2></div></div>
   <div class="me-hub" id="meHub"></div>
+  <details class="me-set"><summary>設定</summary>
+    <div class="me-set-b"><p>命理道場・命理學習與諮詢平台。命理諮詢內容僅供參考，不取代醫療、法律、投資等專業意見。</p><p id="contactLine2" class="muted"></p></div>
+  </details>
 </section>
-<p class="app-foot">命理道場・命理學習與諮詢平台。命理諮詢內容僅供參考，不取代醫療、法律、投資等專業意見。<span id="contactLine"></span></p>
+<p class="app-foot" hidden>命理道場・命理學習與諮詢平台。命理諮詢內容僅供參考，不取代醫療、法律、投資等專業意見。<span id="contactLine"></span></p>
 </main>
 
 
@@ -510,6 +495,6 @@
 <script src="js/shop.js"></script>
 <script src="js/app.js"></script>
 <script src="js/nav.js"></script>
-<script>document.getElementById('contactLine').textContent=(window.MDJ_CONFIG&&MDJ_CONFIG.CONTACT)?'　'+MDJ_CONFIG.CONTACT:'';</script>
+<script>document.getElementById('contactLine2').textContent=(window.MDJ_CONFIG&&MDJ_CONFIG.CONTACT)?MDJ_CONFIG.CONTACT:'';document.getElementById('contactLine').textContent=(window.MDJ_CONFIG&&MDJ_CONFIG.CONTACT)?'　'+MDJ_CONFIG.CONTACT:'';</script>
 </body>
 </html>

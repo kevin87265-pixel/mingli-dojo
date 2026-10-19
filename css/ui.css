@@ -927,3 +927,7 @@ body.has-btm{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 .xq-k{flex:0 0 4.7em;font-size:.82em}
 .xq-vals{font-size:.95em;gap:2px;min-width:0}
 .xq-vals b{font-size:1.1em}
+/* 左上角「道」印章和標題對齊 */
+.brand{align-items:center!important}
+.brand .seal{transform:none!important;flex:0 0 auto;line-height:1}
+.brand h1{line-height:1.2;margin:0}
